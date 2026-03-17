@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Faire-part de Mariage - Isaac & Ilana</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="faire-part.css?v=2">
+</head>
+<body>
+
+<div id="envelopeOverlay" class="envelope-overlay">
+    <div class="envelope-wrapper" id="envelope">
+        <div class="env-back"></div>
+
+        <div class="card-inside">
+            <img src="logo.png" alt="Logo I&I" class="card-logo" />
+            <div class="card-text">Isaac & Ilana</div>
+        </div>
+
+        <div class="env-pocket">
+            <div class="env-bottom"></div>
+            <div class="env-left"></div>
+            <div class="env-right"></div>
+        </div>
+
+        <div class="env-flap">
+            <div class="flap-front"></div>
+            <div class="flap-back"></div>
+        </div>
+
+        <img src="seal.png" alt="Sceau I&I" class="wax-seal" />
+    </div>
+    <div class="instruction" id="instruction">Cliquez pour ouvrir</div>
+</div>
+
+<div id="mainSite" class="main-site">
+
+    <div class="background-container"></div>
+
+    <nav class="navbar navbar-expand navbar-light sticky-top nav-custom">
+        <div class="container justify-content-center gap-4">
+            <a href="#faire-part" class="nav-link-custom active">Faire-part</a>
+            <a href="#lieu" class="nav-link-custom">Lieu</a>
+            <a href="#rsvp" class="nav-link-custom">RSVP</a>
+        </div>
+    </nav>
+
+    <div class="container py-4" style="max-width: 900px;">
+
+        <div class="card card-elegant mb-4 text-center" id="countdown-card">
+            <div class="card-body p-0">
+                <div class="invitation-border-outer">
+                    <div class="invitation-border-inner p-4 py-4">
+                        <h2 class="countdown-title">Le grand jour approche...</h2>
+                        <div class="d-flex justify-content-center flex-wrap gap-2 gap-sm-3 mt-3">
+                            <div class="countdown-box">
+                                <div class="countdown-number" id="cd-days">--</div>
+                                <div class="countdown-label">Jours</div>
+                            </div>
+                            <div class="countdown-box">
+                                <div class="countdown-number" id="cd-hours">--</div>
+                                <div class="countdown-label">Heures</div>
+                            </div>
+                            <div class="countdown-box">
+                                <div class="countdown-number" id="cd-mins">--</div>
+                                <div class="countdown-label">Minutes</div>
+                            </div>
+                            <div class="countdown-box">
+                                <div class="countdown-number" id="cd-secs">--</div>
+                                <div class="countdown-label">Secondes</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card card-elegant card-invitation mb-4" id="faire-part">
+            <div class="card-body p-0">
+                <div class="invitation-border-outer">
+                    <div class="invitation-border-inner">
+
+                        <img src="floral.png" alt="Flowers" class="floral-cluster top-left" />
+                        <img src="floral.png" alt="Flowers" class="floral-cluster bottom-right" />
+                        <br><br>
+
+                        <div class="text-center mb-4 d-flex justify-content-center w-100">
+                            <div style="position: relative; width: 60%; max-width: 250px;">
+                                <svg viewBox="0 0 320 200" style="position:absolute; top:-30%; left:-14%; width: 128%; height: 100%; pointer-events: none; z-index: 2;">
+                                    <path id="hebrew-curve" d="M 20 180 A 140 140 0 0 1 300 180" fill="transparent" />
+                                    <text font-family="'Cormorant Garamond', serif" font-size="20" fill="var(--text-dark)" text-anchor="middle" direction="rtl" letter-spacing="1">
+                                        <textPath href="#hebrew-curve" startOffset="50%">
+                                            קול ששון וקול שמחה קול חתן וקול כלה
+                                        </textPath>
+                                    </text>
+                                </svg>
+                                <img src="logo.png" alt="Isaac & Ilana" class="logo-img" style="width: 100%; height: auto; position:relative; z-index: 1;" />
+                            </div>
+                        </div>
+
+                        <div class="content w-100">
+
+                            <div class="row parents-section">
+                                <div class="col-6 text-center">
+                                    M. et Mme Alice & Armand Bitton<br><br>
+                                    <strong>M. et Mme Déborah & Simon Bitton</strong>
+                                </div>
+                                <div class="col-6 text-center">
+                                    Mme Rachel Abittan<br>
+                                    Mme Odette Anidjar<br><br>
+                                    <strong>M. et Mme Aviva et Dan Anidjar</strong>
+                                </div>
+                            </div>
+
+                            <div class="announce-text">
+                                Remercient Hachem d'avoir la joie de vous faire part<br>
+                                du mariage de leurs petits-enfants et enfants
+                            </div>
+
+                            <div class="names-section">
+                                <h1 class="name name-left">Ilana</h1>
+                                <div class="ampersand">&</div>
+                                <h1 class="name name-right">Isaac</h1>
+                            </div>
+
+                            <div class="invite-text">
+                                Et vous prient de bien vouloir assister à la 'Houpa<br>
+                                Qui sera célébrée à 16h30
+                            </div>
+
+                            <div class="date-section">
+                                <div class="date-line"></div>
+                                <div class="date-month-year">Dimanche<br>15 Sivan 5786</div>
+                                <div class="date-day">31</div>
+                                <div class="date-month-year">mai<br>2026</div>
+                                <div class="date-line"></div>
+                            </div>
+
+                            <div class="reception-details">La houppa sera suivie d’une réception</div>
+
+                            <div class="rabbi-blessing">
+                                    <span style="font-size: 0.9rem; text-transform: none; letter-spacing: 0.5px; font-style: normal; margin-top: 0;">
+                                        Une pensée particulière à nos chers grands parents<br>
+                                        <strong>Richard et Esther Georgette Zarrouk</strong> et à <strong>Amram Abittan et Isaac Anidjar</strong><br>
+                                        avec qui nous aurions aimé vivre ce moment.
+                                    </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card card-elegant mb-4" id="lieu">
+            <div class="card-body p-0">
+                <div class="invitation-border-outer">
+                    <div class="invitation-border-inner p-4 py-5 text-center w-100 d-flex flex-column align-items-center">
+                        <h2 class="section-title"><i class="bi bi-geo-alt me-2"></i>Lieu & Horaires</h2>
+                        <div class="location-time mt-3">À 16h30 - précédé d'une Kabbalat Panim</div>
+                        <div class="location-name mt-2">Château Barthélemy</div>
+                        <div class="location-address mt-1">
+                            Route Nationale 191<br>
+                            78660 Paray-Douaville
+                        </div>
+                        <a href="https://waze.com/ul?q=Chateau+Barthelemy+Paray-Douaville&navigate=yes" target="_blank" class="btn btn-waze mt-3" style="width: max-content;">
+                            <i class="bi bi-cursor-fill me-2"></i>Itinéraire Waze
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card card-elegant card-invitation mb-4" id="mairie">
+            <div class="card-body p-0">
+                <div class="invitation-border-outer">
+                    <div class="invitation-border-inner">
+
+                        <img src="floral.png" alt="Flowers" class="floral-cluster top-left" />
+                        <img src="floral.png" alt="Flowers" class="floral-cluster bottom-right" />
+                        <br><br>
+
+                        <div class="content w-100">
+
+                            <div class="names-section">
+                                <h1 class="name name-left">Isaac</h1>
+                                <div class="ampersand">&</div>
+                                <h1 class="name name-right">Ilana</h1>
+                            </div>
+
+                            <div class="announce-text">
+                                Se diront oui,
+                            </div>
+
+                            <div class="invite-text">
+                                À la mairie de Gagny,<br>
+                                1 esplanade michel teulet, 93220<br><br>
+                                La cérémonie sera suivie d’un vin d’honneur
+                            </div>
+
+                            <div class="date-section">
+                                <div class="date-line"></div>
+                                <div class="date-month-year">Mercredi<br></div>
+                                <div class="date-day">03</div>
+                                <div class="date-month-year">juin<br>2026</div>
+                                <div class="date-line"></div>
+                            </div>
+
+                            <div class="reception-details">La cérémonie sera suivie d’un vin d’honneur</div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card card-elegant mb-4">
+            <div class="card-body p-0">
+                <div class="invitation-border-outer">
+                    <div class="invitation-border-inner p-4 py-4">
+                        <h2 class="section-title text-center mb-4"><i class="bi bi-telephone me-2"></i>Contacts</h2>
+                        <div class="row text-center w-100">
+                            <div class="col-md-4 mb-3 mb-md-0">
+                                <div class="contact-name">Famille Bitton</div>
+                                <div class="contact-info">06 65 96 31 60</div>
+                                <a href="mailto:bittonilana02@gmail.com" class="contact-email">bittonilana02@gmail.com</a>
+                            </div>
+                            <div class="col-md-4 mb-3 mb-md-0 d-flex align-items-center justify-content-center">
+                                <div class="response-note">Réponse souhaitée<br>dès réception</div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="contact-name">Famille Anidjar</div>
+                                <div class="contact-info">06 99 12 05 39</div>
+                                <a href="mailto:anidjar4@gmail.com" class="contact-email">anidjar4@gmail.com</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card card-elegant mb-5" id="rsvp">
+            <div class="card-body p-0">
+                <div class="invitation-border-outer">
+                    <div class="invitation-border-inner p-4 py-5">
+                        <h2 class="rsvp-title text-center">Confirmez votre présence</h2>
+                        <p class="rsvp-subtitle text-center">Merci de répondre dès que possible</p>
+
+                        <form id="rsvp-form" class="mt-4 text-start w-100">
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label for="prenom" class="form-label label-custom">Prénom</label>
+                                    <input type="text" class="form-control input-custom" id="prenom" placeholder="Votre prénom" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="nom" class="form-label label-custom">Nom</label>
+                                    <input type="text" class="form-control input-custom" id="nom" placeholder="Votre nom" required>
+                                </div>
+                            </div>
+
+                            <div class="mb-3 mt-4">
+                                <label class="form-label label-custom">Famille</label>
+                                <div class="d-flex gap-4">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="famille" id="famille_sudry" value="sudry" required>
+                                        <label class="form-check-label label-custom text-lowercase text-capitalize" for="famille_sudry">Famille Bitton</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="famille" id="famille_lumbroso" value="lumbroso">
+                                        <label class="form-check-label label-custom text-lowercase text-capitalize" for="famille_lumbroso">Famille Anidjar</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mb-3 mt-3">
+                                <label class="form-label label-custom">Serez-vous présent(e) ?</label>
+                                <div class="d-flex gap-4">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="presence" id="present_oui" value="oui" required>
+                                        <label class="form-check-label label-custom text-lowercase text-capitalize" for="present_oui">Oui, avec joie !</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="presence" id="present_non" value="non">
+                                        <label class="form-check-label label-custom text-lowercase text-capitalize" for="present_non">Non, malheureusement</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-12 mb-3 mt-3" id="nb_personnes_container">
+                                <label for="nombre" class="form-label label-custom">Nombre de personnes</label>
+                                <input type="number" class="form-control input-custom" id="nombre" min="1" max="20" value="1" style="max-width: 120px;">
+                            </div>
+
+                            <div class="mb-4 mt-4">
+                                <label for="message" class="form-label label-custom">Message (optionnel)</label>
+                                <textarea class="form-control input-custom" id="message" rows="3" placeholder="Un petit mot pour les mariés..."></textarea>
+                            </div>
+
+                            <div class="text-center mt-4">
+                                <button type="submit" class="btn btn-submit" id="submit-btn">
+                                    <i class="bi bi-envelope-heart me-2"></i>Confirmer
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="success-modal" id="successModal">
+        <div class="success-modal-backdrop" id="successModalBackdrop"></div>
+        <div class="success-modal-card">
+            <div class="success-icon"><i class="bi bi-check-circle-fill"></i></div>
+            <h3 class="success-title">Merci !</h3>
+            <p class="success-text">Votre réponse a bien été enregistrée.<br>Nous avons hâte de vous retrouver !</p>
+            <button type="button" id="successClose" class="btn btn-submit" style="padding: 10px 30px; border-radius: 25px; margin-top: 20px;">Fermer</button>
+        </div>
+    </div>
+
+    <div id="notification-container"></div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script src="faire-part.js?v=2"></script>
+</body>
+</html>
