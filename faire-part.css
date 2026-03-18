@@ -14,7 +14,7 @@
     --text-dark: #452449;
     --text-light: #7c5d7e;
     --bg-color: #f7eff6;
-    --paper-texture: url('https://www.transparenttextures.com/patterns/rice-paper-2.png');
+    --paper-texture: url('rice-paper.png');
     --card-bg: #fdf5fc;
     --env-back: #c8a8c5;
     --env-side: #ddc5da;
@@ -78,17 +78,20 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    transition: opacity 1s ease;
-    perspective: 1500px;
-    -webkit-perspective: 1500px;
     cursor: pointer;
     -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation; /* supprime le délai 300ms iOS */
+}
+
+.envelope-perspective {
+    perspective: 1500px;
+    -webkit-perspective: 1500px;
 }
 
 .envelope-wrapper {
     position: relative;
-    width: 440px;
-    height: 300px;
+    width: min(440px, 88vw);
+    height: calc(min(440px, 88vw) * 300 / 440);
     transition: transform 0.3s ease;
     transform-style: preserve-3d;
     -webkit-transform-style: preserve-3d;
@@ -112,8 +115,10 @@ body {
     position: absolute;
     top: 20px;
     left: 20px;
-    width: 400px;
-    height: 260px;
+    right: 20px;
+    bottom: 20px;
+    width: auto;
+    height: auto;
     background-color: #fff;
     background-image: var(--paper-texture);
     border-radius: 4px;
@@ -189,8 +194,8 @@ body {
 }
 
 .wax-seal {
-    position: absolute; left: 50%; top: 145px; transform: translate(-50%, -50%);
-    width: 140px; height: 140px; z-index: 6; mix-blend-mode: multiply;
+    position: absolute; left: 50%; top: 48.5%; transform: translate(-50%, -50%);
+    width: 31.8%; height: auto; aspect-ratio: 1; z-index: 6; mix-blend-mode: multiply;
     transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.6s ease;
 }
 
@@ -203,7 +208,7 @@ body {
 }
 
 .envelope-wrapper.opened .wax-seal { transform: translate(-50%, -200px) rotateX(180deg); opacity: 0; }
-.envelope-wrapper.pull-out .card-inside { transform: translateY(-140px); box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12); }
+.envelope-wrapper.pull-out .card-inside { transform: translateY(-54%); box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12); }
 
 .envelope-wrapper.zooming .env-back,
 .envelope-wrapper.zooming .env-pocket,
@@ -213,8 +218,8 @@ body {
 }
 
 .envelope-wrapper.zooming .card-inside {
-    transform: translateZ(100px) scale(4) !important;
-    -webkit-transform: translateZ(100px) scale(4) !important;
+    transform: scale(3.5) !important;
+    -webkit-transform: scale(3.5) !important;
     z-index: 100 !important;
     transition: all 1.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
     box-shadow: none !important; border-color: transparent !important; opacity: 0;
@@ -255,8 +260,17 @@ body {
 
 .section-title { font-family: 'Great Vibes', cursive; font-size: 2.2rem; color: var(--primary-purple); margin-bottom: 5px; }
 
-.card-invitation { animation: revealCard 1.2s ease forwards; }
-@keyframes revealCard { 0% { opacity: 0; transform: translateY(30px); } 100% { opacity: 1; transform: translateY(0); } }
+/* Les cards partent cachées et s'animent au scroll via JS */
+.card-elegant {
+    opacity: 0;
+    transform: translateY(35px);
+    transition: opacity 0.4s ease, transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.card-elegant.card-visible {
+
+    opacity: 1;
+    transform: translateY(0);
+}
 
 .invitation-border-outer { border: 2px solid var(--border-color); padding: 7px; margin: 20px; }
 .invitation-border-inner { border: 1px solid var(--border-inner); padding: 30px; position: relative; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; overflow: hidden; }
@@ -311,10 +325,13 @@ body {
 .form-check-input { cursor: pointer; }
 
 /* MODALS & NOTIFICATIONS */
-.success-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; z-index: 10000; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
+.success-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; z-index: 10000; opacity: 0; pointer-events: none; transition: opacity 0.35s ease; }
 .success-modal.show { opacity: 1; pointer-events: auto; }
-.success-title { font-family: 'Great Vibes', cursive; font-size: 2.5rem; color: var(--primary-purple); }
-.success-text { font-size: 0.85rem; color: var(--text-light); }
+.success-modal-backdrop { position: absolute; inset: 0; background: rgba(70, 36, 73, 0.45); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); }
+.success-modal-card { position: relative; z-index: 1; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; box-shadow: 0 20px 60px rgba(94, 44, 95, 0.25); padding: 40px 36px; text-align: center; max-width: min(380px, 90vw); width: 100%; }
+.success-icon { font-size: 3rem; color: #4CAF50; margin-bottom: 12px; }
+.success-title { font-family: 'Great Vibes', cursive; font-size: 2.8rem; color: var(--primary-purple); margin-bottom: 8px; }
+.success-text { font-size: 0.85rem; color: var(--text-light); line-height: 1.7; }
 
 #notification-container { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 9999; }
 .toast { display: flex; align-items: center; gap: 12px; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border: 1px solid var(--border-color); padding: 16px 24px; border-radius: 50px; box-shadow: 0 10px 30px rgba(94, 44, 95, 0.15); margin-top: 10px; opacity: 0; transform: translateY(20px); transition: all 0.4s ease; }
@@ -325,21 +342,104 @@ body {
 #nb_personnes_container.hidden { opacity: 0; max-height: 0; margin: 0 !important; padding: 0 !important; }
 
 /* RESPONSIVE */
+@media (max-width: 768px) {
+    .card-invitation .invitation-border-inner { padding: 90px 30px 75px; }
+    .name { font-size: 3.8rem; }
+    .countdown-title { font-size: 2rem; }
+    .rsvp-title { font-size: 2.4rem; }
+}
+
 @media (max-width: 576px) {
+    /* Enveloppe – plus de scale() : les dimensions sont déjà responsives */
+    .card-text { font-size: 1.8rem; }
+    .card-logo { max-width: 45%; }
+
+    /* Invitation */
     .invitation-border-outer { margin: 10px; }
-    .invitation-border-inner { padding: 80px 15px 70px; }
-    .name { font-size: 3.2rem; }
-    .floral-cluster { width: 250px; }
-    .floral-cluster.top-left { top: -15px; left: -15px; }
-    .floral-cluster.bottom-right { bottom: -15px; right: -15px; }
+    .invitation-border-inner { padding: 70px 15px 60px; }
+    .card-invitation .invitation-border-inner { padding: 70px 15px 60px; }
+
+    /* Fleurs décoratives */
+    .floral-cluster { width: 200px; max-width: 50%; }
+    .floral-cluster.top-left { top: -12px; left: -12px; }
+    .floral-cluster.bottom-right { bottom: -12px; right: -12px; }
+
+    /* Section parents – empilée sur mobile */
+    .parents-section .col-6 { flex: 0 0 100%; max-width: 100%; }
+    .parents-section { font-size: 0.7rem; letter-spacing: 1px; }
+
+    /* Noms */
+    .name { font-size: 3rem; }
+    .names-section { margin: 20px 0 30px; gap: 6px; }
+    .name-left { transform: translateX(-30px) translateY(-12px); }
+    .name-right { transform: translateX(30px) translateY(12px); }
+    .name-left.visible { transform: translateX(0) translateY(-12px); }
+    .name-right.visible { transform: translateX(0) translateY(12px); }
+    .ampersand { font-size: 2.2rem; }
+
+    /* Date */
     .date-section { flex-direction: column; gap: 12px; }
-    .date-line { width: 100px; }
-    .parents-section { font-size: 0.7rem; }
-    .countdown-box { min-width: calc(50% - 10px); max-width: 80px; padding: 8px 4px; }
+    .date-line { width: 100px; height: 1px; }
+    .date-day { font-size: 2.8rem; }
+
+    /* Textes */
+    .reception-details { font-size: 1.5rem; }
+    .section-title { font-size: 1.8rem; }
+    .countdown-title { font-size: 1.8rem; }
+    .rsvp-title { font-size: 2rem; }
+
+    /* Countdown */
+    .countdown-box { min-width: 60px; padding: 8px 6px; }
     .countdown-number { font-size: 1.5rem; }
-    .name-left { transform: translateX(-30px) translateY(-15px); }
-    .name-right { transform: translateX(30px) translateY(15px); }
-    .name-left.visible { transform: translateX(0) translateY(-15px); }
-    .name-right.visible { transform: translateX(0) translateY(15px); }
-    .envelope-wrapper { transform: scale(0.8); }
+
+    /* RSVP radios – passage à la ligne si écran très étroit */
+    .d-flex.gap-4:has(.form-check) { flex-wrap: wrap; gap: 8px !important; }
+}
+
+@media (max-width: 360px) {
+    .name { font-size: 2.6rem; }
+    .invitation-border-inner { padding: 60px 10px 55px; }
+    .parents-section { font-size: 0.65rem; }
+    .date-day { font-size: 2.4rem; }
+}
+
+/* =========================================
+   MOBILE : ANIMATION ENVELOPPE SANS 3D
+   iOS Safari ne peut pas faire du rotateX
+   dans un position:fixed sans flash/bug.
+   On remplace par une animation 2D pure.
+   ========================================= */
+@media (hover: none) and (pointer: coarse) {
+
+    /* Désactive le contexte 3D sur l'enveloppe */
+    .envelope-wrapper {
+        transform-style: flat !important;
+        -webkit-transform-style: flat !important;
+    }
+
+    /* Le rabat s'ouvre en glissant vers le haut + fondu (2D) */
+    .env-flap {
+        transform-style: flat !important;
+        -webkit-transform-style: flat !important;
+        transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+                    opacity  0.5s ease !important;
+    }
+    .envelope-wrapper.opened .env-flap {
+        transform: translateY(-110%) !important;
+        -webkit-transform: translateY(-110%) !important;
+        opacity: 0 !important;
+        z-index: 1 !important;
+        transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+                    opacity  0.5s ease !important;
+    }
+
+    /* Le sceau s'envole vers le haut (2D) */
+    .envelope-wrapper.opened .wax-seal {
+        transform: translate(-50%, -200%) !important;
+        -webkit-transform: translate(-50%, -200%) !important;
+        opacity: 0 !important;
+    }
+
+    /* Le dos (flap-back) est inutile sans 3D */
+    .flap-back { display: none; }
 }

@@ -1,3 +1,9 @@
+// Toujours remettre en haut au chargement (empêche la restauration du scroll par le navigateur)
+if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+document.addEventListener('DOMContentLoaded', function() {
+    window.scrollTo(0, 0);
+});
+
 // === ANIMATION D'OUVERTURE DE L'ENVELOPPE ===
 const envelopeOverlay = document.getElementById('envelopeOverlay');
 const envelope = document.getElementById('envelope');
@@ -28,18 +34,14 @@ if (envelopeOverlay && envelope) {
 
         // 4. Disparition de l'enveloppe et apparition du faire-part
         setTimeout(function() {
-            envelopeOverlay.style.opacity = '0';
+            window.scrollTo(0, 0);
+            // display:none direct — aucune transition CSS sur l'overlay
+            // pour éviter tout bug de recomposition iOS Safari
+            envelopeOverlay.style.display = 'none';
             if (mainSite) mainSite.classList.add('revealed');
-
-            // On débloque le défilement !
             document.body.style.overflow = 'auto';
             document.documentElement.style.overflow = 'auto';
         }, 2200);
-
-        // 5. On retire l'overlay
-        setTimeout(function() {
-            envelopeOverlay.style.display = 'none';
-        }, 3200);
     });
 }
 
@@ -73,18 +75,29 @@ setInterval(updateCountdown, 1000);
 
 // === ANIMATION AU SCROLL ===
 document.addEventListener("DOMContentLoaded", function() {
-    const observer = new IntersectionObserver((entries) => {
+    // Noms & esperluette
+    const nameObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 entry.target.classList.add('visible');
             }
         });
-    }, {
-        threshold: 0
-    });
+    }, { threshold: 0 });
 
-    const elementsToAnimate = document.querySelectorAll('.name-left, .name-right, .ampersand');
-    elementsToAnimate.forEach(el => observer.observe(el));
+    document.querySelectorAll('.name-left, .name-right, .ampersand')
+        .forEach(el => nameObserver.observe(el));
+
+    // Cards – apparaissent dès qu'elles entrent dans le viewport
+    const cardObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('card-visible');
+                cardObserver.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0 });
+
+    document.querySelectorAll('.card-elegant').forEach(card => cardObserver.observe(card));
 });
 
 // === GESTION DU FORMULAIRE RSVP ===
@@ -154,8 +167,10 @@ document.addEventListener("DOMContentLoaded", function() {
             try {
                 await fetch(scriptURL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
                 btn.innerHTML = '<i class="bi bi-check-lg me-2"></i>Envoyé !';
-                showToast("Réponse enregistrée avec succès !", "success");
                 rsvpForm.reset();
+                // Modale de confirmation centrée
+                const modal = document.getElementById('successModal');
+                if (modal) modal.classList.add('show');
                 if (nbPersonnesContainer) nbPersonnesContainer.classList.remove('hidden');
                 setTimeout(() => { btn.innerHTML = originalText; btn.disabled = false; }, 2000);
             } catch (error) {
