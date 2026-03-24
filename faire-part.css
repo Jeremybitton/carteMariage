@@ -1,6 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Great+Vibes&family=Montserrat:wght@300;400;500&display=swap');
 
-* {
+/* =========================================
+   RESET & BASE
+   ========================================= */
+*, *::before, *::after {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -21,21 +24,39 @@
     --env-bottom: #e6d2e4;
     --env-flap: #d4b8d2;
     --envelope-shadow: rgba(94, 44, 95, 0.2);
+
+    /* Safe area insets — zero par défaut, remplacées par env() sur iOS */
+    --sat: env(safe-area-inset-top, 0px);
+    --sar: env(safe-area-inset-right, 0px);
+    --sab: env(safe-area-inset-bottom, 0px);
+    --sal: env(safe-area-inset-left, 0px);
 }
 
 html {
     scroll-behavior: smooth;
-    scroll-padding-top: 20vh;
+    scroll-padding-top: 60px; /* hauteur de la navbar */
+    -webkit-text-size-adjust: 100%; /* empêche iOS de grossir les textes en landscape */
+    text-size-adjust: 100%;
 }
 
 body {
     font-family: 'Montserrat', sans-serif;
     background-color: var(--bg-color);
     color: var(--text-dark);
-    overflow: hidden; /* Empêche le défilement au tout début */
+    /* Le scroll est bloqué via .scroll-locked (JS) plutôt qu'overflow:hidden
+       qui cause des bugs sur iOS Safari */
 }
 
-/* FOND GÉNÉRAL */
+/* Scroll-lock robuste pour iOS (technique position:fixed) */
+body.scroll-locked {
+    position: fixed;
+    width: 100%;
+    overflow-y: scroll;
+}
+
+/* =========================================
+   FOND GÉNÉRAL
+   ========================================= */
 .background-container {
     position: fixed;
     top: 0;
@@ -50,9 +71,8 @@ body {
 }
 
 /* =========================================
-   ANIMATION ET DESIGN DE L'ENVELOPPE
+   MAIN SITE
    ========================================= */
-
 .main-site {
     position: relative;
     z-index: 1;
@@ -66,12 +86,20 @@ body {
     pointer-events: auto;
 }
 
+/* =========================================
+   ENVELOPPE — OVERLAY
+   ========================================= */
 .envelope-overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
-    height: 100%;
+    /* Fallback vh, puis dvh pour iOS 15.4+ */
+    height: 100vh;
+    height: 100dvh;
+    /* Tient compte du notch et de la home bar */
+    padding-top: var(--sat);
+    padding-bottom: var(--sab);
     z-index: 20000;
     background-color: var(--bg-color);
     display: flex;
@@ -80,7 +108,7 @@ body {
     align-items: center;
     cursor: pointer;
     -webkit-tap-highlight-color: transparent;
-    touch-action: manipulation; /* supprime le délai 300ms iOS */
+    touch-action: manipulation;
 }
 
 .envelope-perspective {
@@ -93,8 +121,8 @@ body {
     width: min(440px, 88vw);
     height: calc(min(440px, 88vw) * 300 / 440);
     transition: transform 0.3s ease;
-    transform-style: preserve-3d;
-    -webkit-transform-style: preserve-3d;
+    /* PAS de preserve-3d ici : évite que la card-inside entre dans
+       le contexte 3D du rabat, ce qui cause le flash iOS Safari */
 }
 
 .envelope-wrapper:hover:not(.opened) {
@@ -131,8 +159,18 @@ body {
     transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 1.2s ease;
 }
 
-.card-text { font-family: 'Great Vibes', cursive; font-size: 2.6rem; color: var(--primary-purple); }
-.card-logo { width: 120px; height: auto; margin-bottom: 10px; mix-blend-mode: multiply; }
+.card-text {
+    font-family: 'Great Vibes', cursive;
+    font-size: 2.6rem;
+    color: var(--primary-purple);
+}
+
+.card-logo {
+    width: 120px;
+    height: auto;
+    margin-bottom: 10px;
+    mix-blend-mode: multiply;
+}
 
 .env-pocket {
     position: absolute;
@@ -144,28 +182,40 @@ body {
 }
 
 .env-left {
-    position: absolute; top: 0; left: 0; width: 45%; height: 100%;
-    background-color: var(--env-side); background-image: var(--paper-texture);
+    position: absolute;
+    top: 0; left: 0;
+    width: 45%; height: 100%;
+    background-color: var(--env-side);
+    background-image: var(--paper-texture);
     clip-path: polygon(0 0, 100% 50%, 0 100%);
     -webkit-clip-path: polygon(0 0, 100% 50%, 0 100%);
 }
 
 .env-right {
-    position: absolute; top: 0; right: 0; width: 45%; height: 100%;
-    background-color: var(--env-side); background-image: var(--paper-texture);
+    position: absolute;
+    top: 0; right: 0;
+    width: 45%; height: 100%;
+    background-color: var(--env-side);
+    background-image: var(--paper-texture);
     clip-path: polygon(100% 0, 100% 100%, 0 50%);
     -webkit-clip-path: polygon(100% 0, 100% 100%, 0 50%);
 }
 
 .env-bottom {
-    position: absolute; bottom: 0; left: 0; width: 100%; height: 50.5%;
-    background-color: var(--env-bottom); background-image: var(--paper-texture);
+    position: absolute;
+    bottom: 0; left: 0;
+    width: 100%; height: 50.5%;
+    background-color: var(--env-bottom);
+    background-image: var(--paper-texture);
     clip-path: polygon(0 100%, 0 0%, 50% 0, 100% 0%, 100% 100%);
     -webkit-clip-path: polygon(0 100%, 0 0%, 50% 0, 100% 0%, 100% 100%);
 }
 
 .env-flap {
-    position: absolute; top: 0; left: 0; width: 100%; height: 60%; z-index: 5;
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 60%;
+    z-index: 5;
     transform-origin: top center;
     transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), z-index 0s;
     transform-style: preserve-3d;
@@ -173,8 +223,11 @@ body {
 }
 
 .flap-front {
-    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-    background-color: var(--env-flap); background-image: var(--paper-texture);
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background-color: var(--env-flap);
+    background-image: var(--paper-texture);
     clip-path: polygon(0 0, 100% 0, 50% 100%);
     -webkit-clip-path: polygon(0 0, 100% 0, 50% 100%);
     border-radius: 4px 4px 0 0;
@@ -183,8 +236,11 @@ body {
 }
 
 .flap-back {
-    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-    background-color: var(--env-back); background-image: var(--paper-texture);
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background-color: var(--env-back);
+    background-image: var(--paper-texture);
     clip-path: polygon(0 0, 100% 0, 50% 100%);
     -webkit-clip-path: polygon(0 0, 100% 0, 50% 100%);
     backface-visibility: hidden;
@@ -194,27 +250,45 @@ body {
 }
 
 .wax-seal {
-    position: absolute; left: 50%; top: 48.5%; transform: translate(-50%, -50%);
-    width: 31.8%; height: auto; aspect-ratio: 1; z-index: 6; mix-blend-mode: multiply;
+    position: absolute;
+    left: 50%; top: 48.5%;
+    transform: translate(-50%, -50%);
+    width: 31.8%; height: auto;
+    aspect-ratio: 1;
+    z-index: 6;
+    mix-blend-mode: multiply;
     transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.6s ease;
 }
 
-/* ANIMATIONS 3D ENVELOPPE */
+/* Animations 3D enveloppe
+   La perspective est portée directement dans le transform du rabat
+   (fonction perspective()) plutôt que par le parent — ainsi la card-inside
+   reste hors du contexte 3D et n'est plus affectée sur iOS Safari */
 .envelope-wrapper.opened .env-flap {
-    transform: rotateX(180deg);
-    -webkit-transform: rotateX(180deg);
+    transform: perspective(1500px) rotateX(180deg);
+    -webkit-transform: perspective(1500px) rotateX(180deg);
     z-index: 1;
-    transition: -webkit-transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), z-index 0s 0.4s;
+    transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1),
+                -webkit-transform 0.8s cubic-bezier(0.4, 0, 0.2, 1),
+                z-index 0s 0.4s;
 }
 
-.envelope-wrapper.opened .wax-seal { transform: translate(-50%, -200px) rotateX(180deg); opacity: 0; }
-.envelope-wrapper.pull-out .card-inside { transform: translateY(-54%); box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12); }
+.envelope-wrapper.opened .wax-seal {
+    transform: translate(-50%, -200px);
+    opacity: 0;
+}
+
+.envelope-wrapper.pull-out .card-inside {
+    transform: translateY(-54%);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+}
 
 .envelope-wrapper.zooming .env-back,
 .envelope-wrapper.zooming .env-pocket,
 .envelope-wrapper.zooming .env-flap,
 .envelope-wrapper.zooming .wax-seal {
-    opacity: 0; transition: opacity 0.8s ease;
+    opacity: 0;
+    transition: opacity 0.8s ease;
 }
 
 .envelope-wrapper.zooming .card-inside {
@@ -222,126 +296,704 @@ body {
     -webkit-transform: scale(3.5) !important;
     z-index: 100 !important;
     transition: all 1.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
-    box-shadow: none !important; border-color: transparent !important; opacity: 0;
+    box-shadow: none !important;
+    border-color: transparent !important;
+    opacity: 0;
 }
 
 .instruction {
-    position: absolute; bottom: 45px; font-family: 'Montserrat', sans-serif;
-    text-transform: uppercase; letter-spacing: 3px; font-size: 0.75rem;
-    color: var(--text-light); animation: pulse 2s infinite; transition: opacity 0.4s ease;
+    position: absolute;
+    bottom: max(45px, calc(45px + var(--sab)));
+    font-family: 'Montserrat', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    font-size: 0.75rem;
+    color: var(--text-light);
+    animation: pulse 2s infinite;
+    transition: opacity 0.4s ease;
 }
-@keyframes pulse { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
+
+@keyframes pulse {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 1; }
+}
+
+/* Animation 3D identique sur tous les appareils — aucune surcharge mobile */
 
 /* =========================================
-   DESIGN DU SITE (FAIRE-PART, RSVP...)
+   NAVBAR
    ========================================= */
-
 .nav-custom {
-    background-color: rgba(247, 239, 246, 0.95) !important; backdrop-filter: blur(10px);
-    border-bottom: 1px solid rgba(138, 108, 142, 0.15); padding: 14px 0;
+    background-color: rgba(247, 239, 246, 0.95) !important;
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(138, 108, 142, 0.15);
+    padding: 14px 0;
+    /* Tient compte de l'encoche Dynamic Island / notch */
+    padding-left: max(0px, var(--sal));
+    padding-right: max(0px, var(--sar));
 }
+
 .nav-link-custom {
-    font-family: 'Montserrat', sans-serif; font-size: 0.8rem; text-transform: uppercase;
-    letter-spacing: 3px; color: var(--primary-purple) !important; text-decoration: none;
-    padding: 5px 15px; border-bottom: 2px solid transparent; transition: all 0.3s ease;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: var(--primary-purple) !important;
+    text-decoration: none;
+    padding: 5px 15px;
+    border-bottom: 2px solid transparent;
+    transition: all 0.3s ease;
+    white-space: nowrap;
 }
-.nav-link-custom:hover, .nav-link-custom.active { border-bottom-color: var(--border-inner); color: var(--text-dark) !important; }
 
-.card-elegant {
-    background-color: var(--card-bg); background-image: var(--paper-texture); border: 1px solid var(--border-color);
-    border-radius: 8px; box-shadow: 0 8px 30px rgba(94, 44, 95, 0.1); overflow: hidden;
+.nav-link-custom:hover,
+.nav-link-custom.active {
+    border-bottom-color: var(--border-inner);
+    color: var(--text-dark) !important;
 }
-.logo-img { width: 250px; max-width: 60%; height: auto; mix-blend-mode: multiply; }
 
-.countdown-title { font-family: 'Great Vibes', cursive; font-size: 2.5rem; color: var(--primary-purple); }
-.countdown-box { background-color: rgba(255, 255, 255, 0.5); border: 1px solid var(--border-color); border-radius: 8px; padding: 15px 12px; min-width: 70px; }
-.countdown-number { font-family: 'Cormorant Garamond', serif; font-size: 2.2rem; font-weight: 700; color: var(--primary-purple); line-height: 1; }
-.countdown-label { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 2px; color: var(--text-light); margin-top: 5px; }
+/* =========================================
+   CONTENEUR PRINCIPAL
+   ========================================= */
+.main-site > .container {
+    padding-left: max(12px, calc(12px + var(--sal)));
+    padding-right: max(12px, calc(12px + var(--sar)));
+}
 
-.section-title { font-family: 'Great Vibes', cursive; font-size: 2.2rem; color: var(--primary-purple); margin-bottom: 5px; }
-
-/* Les cards partent cachées et s'animent au scroll via JS */
+/* =========================================
+   CARDS ÉLÉGANTES
+   ========================================= */
 .card-elegant {
+    background-color: var(--card-bg);
+    background-image: var(--paper-texture);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    box-shadow: 0 8px 30px rgba(94, 44, 95, 0.1);
+    overflow: hidden;
+    /* Animation au scroll */
     opacity: 0;
     transform: translateY(35px);
     transition: opacity 0.4s ease, transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
-.card-elegant.card-visible {
 
+.card-elegant.card-visible {
     opacity: 1;
     transform: translateY(0);
 }
 
-.invitation-border-outer { border: 2px solid var(--border-color); padding: 7px; margin: 20px; }
-.invitation-border-inner { border: 1px solid var(--border-inner); padding: 30px; position: relative; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; overflow: hidden; }
-.card-invitation .invitation-border-inner { padding: 100px 40px 80px; }
+/* =========================================
+   LOGO
+   ========================================= */
+.logo-img {
+    width: 250px;
+    max-width: 60%;
+    height: auto;
+    mix-blend-mode: multiply;
+}
 
-.floral-cluster { position: absolute; width: 320px; max-width: 55%; height: auto; z-index: 1; pointer-events: none; mix-blend-mode: multiply; opacity: 0.95; }
-.floral-cluster.top-left { top: -20px; left: -20px; transform: scaleY(-1); }
-.floral-cluster.bottom-right { bottom: -20px; right: -20px; transform: scaleX(-1); }
+/* =========================================
+   COUNTDOWN
+   ========================================= */
+.countdown-title {
+    font-family: 'Great Vibes', cursive;
+    font-size: 2.5rem;
+    color: var(--primary-purple);
+}
 
-.content { position: relative; z-index: 2; }
-.parents-section { margin-bottom: 30px; font-size: 0.85rem; line-height: 1.8; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-light); }
-.parents-section strong { color: var(--text-dark); font-weight: 500; }
-.announce-text { font-size: 0.75rem; color: var(--text-light); margin: 15px 0 35px; line-height: 1.8; text-transform: uppercase; letter-spacing: 2px; }
+.countdown-box {
+    background-color: rgba(255, 255, 255, 0.5);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 15px 12px;
+    min-width: 70px;
+}
 
-.names-section { margin: 30px 0 40px; display: flex; flex-direction: row; align-items: flex-end; justify-content: center; gap: 10px; }
-.name { font-family: 'Great Vibes', cursive; font-size: 4.5rem; color: var(--primary-purple); margin: 0; line-height: 1.1; font-weight: normal; text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.8); transition: transform 0.4s ease, color 0.3s ease, text-shadow 0.3s ease; }
-.name-left { align-self: flex-start; opacity: 0; transform: translateX(-80px) translateY(-30px); transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.4, 0, 0.2, 1); }
-.name-right { align-self: flex-end; opacity: 0; transform: translateX(80px) translateY(30px); transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.4, 0, 0.2, 1); }
-.name-left.visible { opacity: 1; transform: translateX(0) translateY(-30px); }
-.name-right.visible { opacity: 1; transform: translateX(0) translateY(30px); }
+.countdown-number {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: var(--primary-purple);
+    line-height: 1;
+}
 
-.ampersand { font-family: 'Great Vibes', cursive; font-size: 3rem; color: var(--border-inner); opacity: 0; transform: scale(0.5); transition: opacity 0.6s ease 0.4s, transform 0.6s ease 0.4s; align-self: center; }
-.ampersand.visible { opacity: 0.9; transform: scale(1); }
+.countdown-label {
+    font-size: 0.6rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--text-light);
+    margin-top: 5px;
+}
 
-.invite-text { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 2px; color: var(--text-light); margin: 20px 0; line-height: 1.8; }
-.date-section { display: flex; align-items: center; justify-content: center; gap: 20px; margin: 25px 0; }
-.date-line { height: 1px; width: 45px; background-color: var(--border-color); opacity: 0.6; }
-.date-day { font-family: 'Cormorant Garamond', serif; font-size: 3.5rem; color: var(--primary-purple); line-height: 1; font-weight: 600; }
-.date-month-year { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 2.5px; color: var(--text-dark); line-height: 1.6; }
-.reception-details { font-family: 'Great Vibes', cursive; font-size: 2rem; color: var(--border-inner); margin-top: 15px; margin-bottom: 25px; }
-.rabbi-blessing { font-family: 'Cormorant Garamond', serif; font-style: italic; color: var(--text-light); font-size: 1.05rem; line-height: 1.6; margin-top: 35px; padding: 0 20px; }
+.section-title {
+    font-family: 'Great Vibes', cursive;
+    font-size: 2.2rem;
+    color: var(--primary-purple);
+    margin-bottom: 5px;
+}
 
-.location-time { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; font-style: italic; color: var(--primary-purple); }
-.location-name { font-size: 1.1rem; font-weight: 500; text-transform: uppercase; letter-spacing: 2px; color: var(--text-dark); }
-.location-address { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-light); line-height: 1.8; }
-.btn-waze { background-color: var(--primary-purple); color: #fff; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 2px; border-radius: 25px; padding: 10px 25px; transition: all 0.3s ease; }
+/* =========================================
+   INVITATION BORDER
+   ========================================= */
+.invitation-border-outer {
+    border: 2px solid var(--border-color);
+    padding: 7px;
+    margin: 20px;
+}
+
+.invitation-border-inner {
+    border: 1px solid var(--border-inner);
+    padding: 30px;
+    position: relative;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.card-invitation .invitation-border-inner {
+    padding: 100px 40px 80px;
+}
+
+/* =========================================
+   FLEURS DÉCORATIVES
+   ========================================= */
+.floral-cluster {
+    position: absolute;
+    width: 320px;
+    max-width: 55%;
+    height: auto;
+    z-index: 1;
+    pointer-events: none;
+    mix-blend-mode: multiply;
+    opacity: 0.95;
+}
+
+.floral-cluster.top-left {
+    top: -20px;
+    left: -20px;
+    transform: scaleY(-1);
+}
+
+.floral-cluster.bottom-right {
+    bottom: -20px;
+    right: -20px;
+    transform: scaleX(-1);
+}
+
+/* =========================================
+   CONTENU DU FAIRE-PART
+   ========================================= */
+.content {
+    position: relative;
+    z-index: 2;
+}
+
+.parents-section {
+    margin-bottom: 30px;
+    font-size: 0.85rem;
+    line-height: 1.8;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--text-light);
+}
+
+.parents-section strong {
+    color: var(--text-dark);
+    font-weight: 500;
+}
+
+.announce-text {
+    font-size: 0.75rem;
+    color: var(--text-light);
+    margin: 15px 0 35px;
+    line-height: 1.8;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+/* Section des noms */
+.names-section {
+    margin: 30px 0 40px;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 10px;
+}
+
+.name {
+    font-family: 'Great Vibes', cursive;
+    font-size: 4.5rem;
+    color: var(--primary-purple);
+    margin: 0;
+    line-height: 1.1;
+    font-weight: normal;
+    text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.8);
+    transition: transform 0.4s ease, color 0.3s ease, text-shadow 0.3s ease;
+}
+
+.name-left {
+    align-self: flex-start;
+    opacity: 0;
+    transform: translateX(-80px) translateY(-30px);
+    transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.name-right {
+    align-self: flex-end;
+    opacity: 0;
+    transform: translateX(80px) translateY(30px);
+    transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.name-left.visible {
+    opacity: 1;
+    transform: translateX(0) translateY(-30px);
+}
+
+.name-right.visible {
+    opacity: 1;
+    transform: translateX(0) translateY(30px);
+}
+
+.ampersand {
+    font-family: 'Great Vibes', cursive;
+    font-size: 3rem;
+    color: var(--border-inner);
+    opacity: 0;
+    transform: scale(0.5);
+    transition: opacity 0.6s ease 0.4s, transform 0.6s ease 0.4s;
+    align-self: center;
+}
+
+.ampersand.visible {
+    opacity: 0.9;
+    transform: scale(1);
+}
+
+.invite-text {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--text-light);
+    margin: 20px 0;
+    line-height: 1.8;
+}
+
+/* Section date */
+.date-section {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    margin: 25px 0;
+    flex-wrap: nowrap;
+}
+
+.date-line {
+    height: 1px;
+    width: 45px;
+    background-color: var(--border-color);
+    opacity: 0.6;
+    flex-shrink: 0;
+}
+
+.date-day {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 3.5rem;
+    color: var(--primary-purple);
+    line-height: 1;
+    font-weight: 600;
+}
+
+.date-month-year {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 2.5px;
+    color: var(--text-dark);
+    line-height: 1.6;
+}
+
+.reception-details {
+    font-family: 'Great Vibes', cursive;
+    font-size: 2rem;
+    color: var(--border-inner);
+    margin-top: 15px;
+    margin-bottom: 25px;
+}
+
+.rabbi-blessing {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    color: var(--text-light);
+    font-size: 1.05rem;
+    line-height: 1.6;
+    margin-top: 35px;
+    padding: 0 20px;
+}
+
+/* =========================================
+   LIEU
+   ========================================= */
+.location-time {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.3rem;
+    font-style: italic;
+    color: var(--primary-purple);
+}
+
+.location-name {
+    font-size: 1.1rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--text-dark);
+}
+
+.location-address {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--text-light);
+    line-height: 1.8;
+}
+
+.btn-waze {
+    background-color: var(--primary-purple);
+    color: #fff;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    border-radius: 25px;
+    padding: 10px 25px;
+    transition: all 0.3s ease;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+}
+
 .btn-waze:hover { background-color: var(--text-dark); color: #fff; }
 
-.contact-name { font-size: 0.8rem; font-weight: 500; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-dark); margin-bottom: 4px; }
-.contact-info { font-size: 0.8rem; color: var(--text-light); }
-.contact-email { font-size: 0.75rem; color: var(--text-light); text-decoration: none; }
-.response-note { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 0.95rem; color: var(--text-light); }
+/* =========================================
+   CONTACTS
+   ========================================= */
+.contact-name {
+    font-size: 0.8rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--text-dark);
+    margin-bottom: 4px;
+}
 
-.rsvp-title { font-family: 'Great Vibes', cursive; font-size: 3rem; color: var(--primary-purple); margin-bottom: 5px; }
-.rsvp-subtitle { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 2px; color: var(--text-light); }
-.label-custom { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 2px; color: var(--text-light); }
-.input-custom { border: 1px solid var(--border-color) !important; background-color: rgba(255, 255, 255, 0.7) !important; font-family: 'Montserrat', sans-serif; font-size: 0.85rem; color: var(--text-dark); border-radius: 4px !important; }
-.btn-submit { background-color: var(--primary-purple); color: #fff; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 3px; border: 1px solid var(--border-inner); border-radius: 4px; padding: 12px 40px; transition: all 0.4s ease; }
+.contact-info { font-size: 0.8rem; color: var(--text-light); }
+
+.contact-email {
+    font-size: 0.75rem;
+    color: var(--text-light);
+    text-decoration: none;
+    word-break: break-all;
+}
+
+.response-note {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 0.95rem;
+    color: var(--text-light);
+}
+
+/* =========================================
+   RSVP
+   ========================================= */
+.rsvp-title {
+    font-family: 'Great Vibes', cursive;
+    font-size: 3rem;
+    color: var(--primary-purple);
+    margin-bottom: 5px;
+}
+
+.rsvp-subtitle {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--text-light);
+}
+
+.label-custom {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--text-light);
+}
+
+.input-custom {
+    border: 1px solid var(--border-color) !important;
+    background-color: rgba(255, 255, 255, 0.7) !important;
+    font-family: 'Montserrat', sans-serif;
+    /* CRITIQUE iOS : font-size < 16px déclenche le zoom automatique */
+    font-size: 16px;
+    color: var(--text-dark);
+    border-radius: 4px !important;
+    /* Scroll fluide dans les textareas sur iOS */
+    -webkit-overflow-scrolling: touch;
+}
+
+.btn-submit {
+    background-color: var(--primary-purple);
+    color: #fff;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    border: 1px solid var(--border-inner);
+    border-radius: 4px;
+    padding: 12px 40px;
+    transition: all 0.4s ease;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+}
+
 .btn-submit:hover { background-color: var(--text-dark); color: #fff; }
-.form-check-input:checked { background-color: var(--primary-purple); border-color: var(--primary-purple); }
-.form-check-label { cursor: pointer; font-size: 0.8rem; color: var(--text-dark); }
+
+.form-check-input:checked {
+    background-color: var(--primary-purple);
+    border-color: var(--primary-purple);
+}
+
+.form-check-label {
+    cursor: pointer;
+    font-size: 0.8rem;
+    color: var(--text-dark);
+}
+
 .form-check-input { cursor: pointer; }
 
-/* MODALS & NOTIFICATIONS */
-.success-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; z-index: 10000; opacity: 0; pointer-events: none; transition: opacity 0.35s ease; }
+/* =========================================
+   MODALE CHOIX ITINÉRAIRE (bottom-sheet)
+   ========================================= */
+.maps-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 10001;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.maps-modal.show {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.maps-modal-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(70, 36, 73, 0.45);
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
+}
+
+.maps-modal-card {
+    position: relative;
+    z-index: 1;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    padding: 28px 24px calc(28px + var(--sab));
+    width: 100%;
+    max-width: 480px;
+    text-align: center;
+    transform: translateY(100%);
+    transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.maps-modal.show .maps-modal-card {
+    transform: translateY(0);
+}
+
+.maps-modal-title {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--text-light);
+    margin-bottom: 22px;
+}
+
+.maps-modal-buttons {
+    display: flex;
+    gap: 14px;
+    justify-content: center;
+    margin-bottom: 18px;
+}
+
+.btn-maps-option {
+    flex: 1;
+    max-width: 150px;
+    padding: 16px 12px;
+    border-radius: 14px;
+    border: 1px solid var(--border-color);
+    background: rgba(255, 255, 255, 0.8);
+    color: var(--text-dark);
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.75rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.15s ease;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+}
+
+.btn-maps-option:active {
+    transform: scale(0.96);
+    background: rgba(255, 255, 255, 1);
+}
+
+.btn-maps-option i {
+    font-size: 1.8rem;
+    color: var(--primary-purple);
+}
+
+.btn-maps-cancel {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.72rem;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text-light);
+    background: none;
+    border: none;
+    padding: 10px 24px;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* =========================================
+   MODALS & NOTIFICATIONS
+   ========================================= */
+.success-modal {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.35s ease;
+    /* Respect du notch sur la modale */
+    padding: var(--sat) var(--sar) var(--sab) var(--sal);
+}
+
 .success-modal.show { opacity: 1; pointer-events: auto; }
-.success-modal-backdrop { position: absolute; inset: 0; background: rgba(70, 36, 73, 0.45); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); }
-.success-modal-card { position: relative; z-index: 1; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; box-shadow: 0 20px 60px rgba(94, 44, 95, 0.25); padding: 40px 36px; text-align: center; max-width: min(380px, 90vw); width: 100%; }
+
+.success-modal-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(70, 36, 73, 0.45);
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
+}
+
+.success-modal-card {
+    position: relative;
+    z-index: 1;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    box-shadow: 0 20px 60px rgba(94, 44, 95, 0.25);
+    padding: 40px 36px;
+    text-align: center;
+    max-width: min(380px, 90vw);
+    width: 100%;
+}
+
 .success-icon { font-size: 3rem; color: #4CAF50; margin-bottom: 12px; }
-.success-title { font-family: 'Great Vibes', cursive; font-size: 2.8rem; color: var(--primary-purple); margin-bottom: 8px; }
+
+.success-title {
+    font-family: 'Great Vibes', cursive;
+    font-size: 2.8rem;
+    color: var(--primary-purple);
+    margin-bottom: 8px;
+}
+
 .success-text { font-size: 0.85rem; color: var(--text-light); line-height: 1.7; }
 
-#notification-container { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 9999; }
-.toast { display: flex; align-items: center; gap: 12px; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border: 1px solid var(--border-color); padding: 16px 24px; border-radius: 50px; box-shadow: 0 10px 30px rgba(94, 44, 95, 0.15); margin-top: 10px; opacity: 0; transform: translateY(20px); transition: all 0.4s ease; }
+#notification-container {
+    position: fixed;
+    bottom: max(20px, calc(20px + var(--sab)));
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 9999;
+    width: calc(100% - 40px);
+    max-width: 480px;
+}
+
+.toast {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: rgba(255, 255, 255, 0.95);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--border-color);
+    padding: 16px 24px;
+    border-radius: 50px;
+    box-shadow: 0 10px 30px rgba(94, 44, 95, 0.15);
+    margin-top: 10px;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.4s ease;
+}
+
 .toast.show { opacity: 1; transform: translateY(0); }
 .toast.success { border-left: 4px solid #4CAF50; }
 .toast.error { border-left: 4px solid #f44336; }
-#nb_personnes_container { transition: all 0.5s ease-out; opacity: 1; max-height: 200px; overflow: hidden; }
-#nb_personnes_container.hidden { opacity: 0; max-height: 0; margin: 0 !important; padding: 0 !important; }
 
-/* RESPONSIVE */
+#nb_personnes_container {
+    transition: all 0.5s ease-out;
+    opacity: 1;
+    max-height: 200px;
+    overflow: hidden;
+}
+
+#nb_personnes_container.hidden {
+    opacity: 0;
+    max-height: 0;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+/* =========================================
+   RESPONSIVE — iPAD PORTRAIT (768px–1024px)
+   ========================================= */
+@media (min-width: 768px) and (max-width: 1024px) {
+    /* Sur iPad, légèrement réduire les paddings */
+    .card-invitation .invitation-border-inner {
+        padding: 90px 40px 75px;
+    }
+
+    .name { font-size: 4rem; }
+    .countdown-title { font-size: 2.2rem; }
+    .rsvp-title { font-size: 2.6rem; }
+
+    /* Les inputs restent à 16px pour éviter le zoom même sur iPad */
+    .input-custom { font-size: 16px; }
+}
+
+/* =========================================
+   RESPONSIVE — TABLETTES / PHABLETS (576px–768px)
+   ========================================= */
 @media (max-width: 768px) {
     .card-invitation .invitation-border-inner { padding: 90px 30px 75px; }
     .name { font-size: 3.8rem; }
@@ -349,97 +1001,105 @@ body {
     .rsvp-title { font-size: 2.4rem; }
 }
 
+/* =========================================
+   RESPONSIVE — iPHONE & PETITS ÉCRANS (≤576px)
+   ========================================= */
 @media (max-width: 576px) {
-    /* Enveloppe – plus de scale() : les dimensions sont déjà responsives */
+
+    /* Navbar — lettres compactes */
+    .nav-link-custom {
+        font-size: 0.68rem;
+        letter-spacing: 1.5px;
+        padding: 5px 10px;
+    }
+
+    /* Enveloppe */
     .card-text { font-size: 1.8rem; }
     .card-logo { max-width: 45%; }
 
-    /* Invitation */
+    /* Borders */
     .invitation-border-outer { margin: 10px; }
-    .invitation-border-inner { padding: 70px 15px 60px; }
-    .card-invitation .invitation-border-inner { padding: 70px 15px 60px; }
+    .invitation-border-inner { padding: 60px 14px 50px; }
+    .card-invitation .invitation-border-inner { padding: 80px 14px 65px; }
 
     /* Fleurs décoratives */
-    .floral-cluster { width: 200px; max-width: 50%; }
-    .floral-cluster.top-left { top: -12px; left: -12px; }
-    .floral-cluster.bottom-right { bottom: -12px; right: -12px; }
+    .floral-cluster { width: 180px; max-width: 48%; }
+    .floral-cluster.top-left { top: -10px; left: -10px; }
+    .floral-cluster.bottom-right { bottom: -10px; right: -10px; }
 
-    /* Section parents – empilée sur mobile */
-    .parents-section .col-6 { flex: 0 0 100%; max-width: 100%; }
-    .parents-section { font-size: 0.7rem; letter-spacing: 1px; }
+    /* Logo SVG centré */
+    .logo-img { width: 180px; max-width: 65%; }
+
+    /* Parents — colonne unique */
+    .parents-section { font-size: 0.72rem; letter-spacing: 0.8px; }
+    .parents-section .col-sm-6 { flex: 0 0 100%; max-width: 100%; }
 
     /* Noms */
     .name { font-size: 3rem; }
-    .names-section { margin: 20px 0 30px; gap: 6px; }
-    .name-left { transform: translateX(-30px) translateY(-12px); }
-    .name-right { transform: translateX(30px) translateY(12px); }
-    .name-left.visible { transform: translateX(0) translateY(-12px); }
-    .name-right.visible { transform: translateX(0) translateY(12px); }
+    .names-section { margin: 16px 0 24px; gap: 4px; }
+    /* Réduction du décalage vertical sur petit écran */
+    .name-left { transform: translateX(-30px) translateY(-18px); }
+    .name-right { transform: translateX(30px) translateY(18px); }
+    .name-left.visible { transform: translateX(0) translateY(-18px); }
+    .name-right.visible { transform: translateX(0) translateY(18px); }
     .ampersand { font-size: 2.2rem; }
 
-    /* Date */
-    .date-section { flex-direction: column; gap: 12px; }
-    .date-line { width: 100px; height: 1px; }
+    /* Date — la ligne horizontale reste, on réduit la taille */
+    .date-section { gap: 10px; }
+    .date-line { width: 30px; }
     .date-day { font-size: 2.8rem; }
+    .date-month-year { font-size: 0.65rem; letter-spacing: 1.5px; }
 
     /* Textes */
+    .announce-text { font-size: 0.68rem; letter-spacing: 1px; margin: 10px 0 20px; }
+    .invite-text { font-size: 0.68rem; letter-spacing: 1px; }
     .reception-details { font-size: 1.5rem; }
+    .rabbi-blessing { font-size: 0.9rem; padding: 0 8px; }
     .section-title { font-size: 1.8rem; }
     .countdown-title { font-size: 1.8rem; }
     .rsvp-title { font-size: 2rem; }
 
     /* Countdown */
-    .countdown-box { min-width: 60px; padding: 8px 6px; }
-    .countdown-number { font-size: 1.5rem; }
+    .countdown-box { min-width: 58px; padding: 8px 6px; }
+    .countdown-number { font-size: 1.4rem; }
 
-    /* RSVP radios – passage à la ligne si écran très étroit */
-    .d-flex.gap-4:has(.form-check) { flex-wrap: wrap; gap: 8px !important; }
-}
+    /* Contacts — empilés en colonne sur mobile */
+    #contacts .row { flex-direction: column; gap: 16px; }
+    .contact-email { font-size: 0.7rem; }
 
-@media (max-width: 360px) {
-    .name { font-size: 2.6rem; }
-    .invitation-border-inner { padding: 60px 10px 55px; }
-    .parents-section { font-size: 0.65rem; }
-    .date-day { font-size: 2.4rem; }
+    /* RSVP form */
+    .d-flex.flex-wrap.gap-3:has(.form-check) { gap: 8px !important; }
+
+    /* Inputs — maintenu à 16px pour éviter le zoom iOS */
+    .input-custom { font-size: 16px; }
+
+    /* Bouton soumettre */
+    .btn-submit { padding: 12px 28px; letter-spacing: 2px; width: 100%; }
+
+    /* Bouton Waze pleine largeur */
+    .btn-waze { width: 100% !important; text-align: center; }
 }
 
 /* =========================================
-   MOBILE : ANIMATION ENVELOPPE SANS 3D
-   iOS Safari ne peut pas faire du rotateX
-   dans un position:fixed sans flash/bug.
-   On remplace par une animation 2D pure.
+   RESPONSIVE — iPhone SE et très petits (≤390px)
    ========================================= */
-@media (hover: none) and (pointer: coarse) {
+@media (max-width: 390px) {
+    .name { font-size: 2.6rem; }
+    .invitation-border-inner { padding: 55px 10px 45px; }
+    .card-invitation .invitation-border-inner { padding: 70px 10px 55px; }
+    .parents-section { font-size: 0.65rem; }
+    .date-day { font-size: 2.4rem; }
+    .countdown-number { font-size: 1.25rem; }
+    .countdown-box { min-width: 52px; }
+    .rsvp-title { font-size: 1.8rem; }
+    .nav-link-custom { font-size: 0.62rem; letter-spacing: 1px; padding: 4px 8px; }
+}
 
-    /* Désactive le contexte 3D sur l'enveloppe */
-    .envelope-wrapper {
-        transform-style: flat !important;
-        -webkit-transform-style: flat !important;
-    }
-
-    /* Le rabat s'ouvre en glissant vers le haut + fondu (2D) */
-    .env-flap {
-        transform-style: flat !important;
-        -webkit-transform-style: flat !important;
-        transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1),
-                    opacity  0.5s ease !important;
-    }
-    .envelope-wrapper.opened .env-flap {
-        transform: translateY(-110%) !important;
-        -webkit-transform: translateY(-110%) !important;
-        opacity: 0 !important;
-        z-index: 1 !important;
-        transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1),
-                    opacity  0.5s ease !important;
-    }
-
-    /* Le sceau s'envole vers le haut (2D) */
-    .envelope-wrapper.opened .wax-seal {
-        transform: translate(-50%, -200%) !important;
-        -webkit-transform: translate(-50%, -200%) !important;
-        opacity: 0 !important;
-    }
-
-    /* Le dos (flap-back) est inutile sans 3D */
-    .flap-back { display: none; }
+/* =========================================
+   RESPONSIVE — iPhone SE classique (≤375px)
+   ========================================= */
+@media (max-width: 375px) {
+    .name { font-size: 2.3rem; }
+    .date-day { font-size: 2.2rem; }
+    .date-line { width: 20px; }
 }
