@@ -7,7 +7,11 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
 
-    <link rel="stylesheet" href="faire-part.css?v=6">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@400&display=swap" rel="stylesheet">
+    <link rel="preload" href="img.png" as="image">
+    <link rel="stylesheet" href="faire-part.css?v=7">
 </head>
     <body>
 
@@ -35,7 +39,10 @@
         <img src="seal.png" alt="Sceau I&I" class="wax-seal" />
     </div>
     </div><!-- .envelope-perspective -->
-    <div class="instruction" id="instruction">Cliquez pour ouvrir</div>
+    <div class="instruction text-center" id="instruction">
+        <i class="bi bi-chevron-up mb-2" style="font-size: 1.2rem;"></i><br>
+        Cliquez pour ouvrir
+    </div>
 </div>
 
 <div id="mainSite" class="main-site">
@@ -50,7 +57,7 @@
         </div>
     </nav>
 
-    <div class="container py-4" style="max-width: 900px;">
+    <div class="container py-4" style="max-width: 1100px;">
 
         <div class="card card-elegant mb-4 text-center" id="countdown-card">
             <div class="card-body p-0">
@@ -90,54 +97,44 @@
                         <br><br>
 
                         <div class="text-center mb-4 d-flex justify-content-center w-100">
-                            <div style="position: relative; width: 60%; max-width: 250px;">
-                                <svg viewBox="0 0 320 200" style="position:absolute; top:-30%; left:-14%; width: 128%; height: 100%; pointer-events: none; z-index: 2;">
-                                    <path id="hebrew-curve" d="M 20 180 A 140 140 0 0 1 300 180" fill="transparent" />
-                                    <text font-family="'Cormorant Garamond', serif" font-size="20" fill="var(--text-dark)" text-anchor="middle" direction="rtl" letter-spacing="1">
-                                        <textPath href="#hebrew-curve" startOffset="50%">
-                                            קול ששון וקול שמחה קול חתן וקול כלה
-                                        </textPath>
-                                    </text>
-                                </svg>
-                                <img src="logo.png" alt="Isaac & Ilana" class="logo-img" style="width: 100%; height: auto; position:relative; z-index: 1;" />
-                            </div>
+                            <img src="logo-simha.png" alt="קול ששון וקול שמחה" class="logo-img" style="width: 85%; max-width: 350px; height: auto; mix-blend-mode: multiply;" />
                         </div>
 
                         <div class="content w-100">
 
-                            <div class="row parents-section gy-3">
-                                <div class="col-12 col-sm-6 text-center">
-                                    M. et Mme Alice & Armand Bitton<br><br>
-                                    <strong>M. et Mme Déborah & Simon Bitton</strong>
+                            <div class="row parents-section g-0">
+                                <div class="col-6 text-start pe-1 pe-sm-3">
+                                    M. et Mme<br>Alice&nbsp;&&nbsp;Armand&nbsp;Bitton<br><br>
+                                    <strong>M. et Mme<br>Déborah&nbsp;&&nbsp;Simon&nbsp;Bitton</strong>
                                 </div>
-                                <div class="col-12 col-sm-6 text-center">
+                                <div class="col-6 text-end ps-1 ps-sm-3">
                                     Mme Rachel Abittan<br>
                                     Mme Odette Anidjar<br><br>
-                                    <strong>M. et Mme Aviva et Dan Anidjar</strong>
+                                    <strong>M. et Mme<br>Aviva&nbsp;&&nbsp;Dan&nbsp;Anidjar</strong>
                                 </div>
                             </div>
 
                             <div class="announce-text">
                                 Remercient Hachem d'avoir la joie de vous faire part<br>
                                 du mariage de leurs petits-enfants et enfants
-                            </div>
+                            </div><br>
 
                             <div class="names-section">
                                 <h1 class="name name-left">Ilana</h1>
                                 <div class="ampersand">&</div>
                                 <h1 class="name name-right">Isaac</h1>
-                            </div>
+                            </div><br>
 
                             <div class="invite-text">
-                                Et vous prient de bien vouloir assister à la 'Houpa<br>
+                                Et vous prient de bien vouloir assister à la Houpa<br>
                                 Qui sera célébrée à 16h30
                             </div>
 
                             <div class="date-section">
                                 <div class="date-line"></div>
-                                <div class="date-month-year">Dimanche<br>15 Sivan 5786</div>
+                                <div class="date-month-year">Dimanche<br>15 Sivan</div>
                                 <div class="date-day">31</div>
-                                <div class="date-month-year">mai<br>2026</div>
+                                <div class="date-month-year">mai 2026<br>5786</div>
                                 <div class="date-line"></div>
                             </div>
 
@@ -146,7 +143,7 @@
                             <div class="rabbi-blessing">
                                     <span style="font-size: 0.9rem; text-transform: none; letter-spacing: 1px; font-style: normal; margin-top: 0;">
                                         Une pensée particulière à nos chers grands parents<br>
-                                        <strong>Richard et Esther Georgette Zarrouk</strong> et à <strong>Amram Abittan et Isaac Anidjar</strong><br>
+                                        <strong>Richard et Esther Georgette Zarrouk</strong> et à <strong>Amram Abittan et Itshak Anidjar</strong><br>
                                         avec qui nous aurions aimé vivre ce moment.
                                     </span>
                                 <br><br><br><br>
@@ -163,7 +160,7 @@
             <div class="card-body p-0">
                 <div class="invitation-border-outer">
                     <div class="invitation-border-inner p-4 py-5 text-center w-100 d-flex flex-column align-items-center">
-                        <h2 class="section-title"><i class="bi bi-geo-alt me-2"></i>Lieu & Horaires</h2>
+                        <h2 class="section-title"><i class="bi bi-geo-alt me-2"></i>Lieu  & Horaires</h2>
                         <div class="location-time mt-3">À 16h30 - précédé d'une Kabbalat Panim</div>
                         <div class="location-name mt-2">Château Barthélemy</div>
                         <div class="location-address mt-1">
@@ -281,15 +278,29 @@
                             </div>
 
                             <div class="mb-3 mt-3">
-                                <label class="form-label label-custom">Serez-vous présent(e) ?</label>
+                                <label class="form-label label-custom">Serez-vous présent(e) pour la houppa ?</label>
                                 <div class="d-flex flex-wrap gap-3">
                                     <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="presence" id="present_oui" value="oui" required>
-                                        <label class="form-check-label label-custom text-lowercase text-capitalize" for="present_oui">Oui, avec joie !</label>
+                                        <input class="form-check-input" type="radio" name="presence_houppa" id="present_houppa_oui" value="oui" required>
+                                        <label class="form-check-label label-custom text-lowercase text-capitalize" for="present_houppa_oui">Oui</label>
                                     </div>
                                     <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="presence" id="present_non" value="non">
-                                        <label class="form-check-label label-custom text-lowercase text-capitalize" for="present_non">Non, malheureusement</label>
+                                        <input class="form-check-input" type="radio" name="presence_houppa" id="present_houppa_non" value="non">
+                                        <label class="form-check-label label-custom text-lowercase text-capitalize" for="present_houppa_non">Non</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mb-3 mt-3">
+                                <label class="form-label label-custom">Serez-vous présent(e) pour la mairie ?</label>
+                                <div class="d-flex flex-wrap gap-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="presence_mairie" id="present_mairie_oui" value="oui" required>
+                                        <label class="form-check-label label-custom text-lowercase text-capitalize" for="present_mairie_oui">Oui</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="presence_mairie" id="present_mairie_non" value="non">
+                                        <label class="form-check-label label-custom text-lowercase text-capitalize" for="present_mairie_non">Non</label>
                                     </div>
                                 </div>
                             </div>
@@ -350,6 +361,15 @@
         <button type="button" id="successClose" class="btn btn-submit" style="padding: 10px 30px; border-radius: 25px; margin-top: 20px;">Fermer</button>
     </div>
 </div>
+
+<audio id="bg-music" loop>
+    <source src="music.mp3" type="audio/mp3">
+    Votre navigateur ne supporte pas la balise audio.
+</audio>
+
+<button id="music-btn" class="music-control muted" aria-label="Contrôler la musique">
+    <i class="bi bi-volume-mute-fill" id="music-icon"></i>
+</button>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 

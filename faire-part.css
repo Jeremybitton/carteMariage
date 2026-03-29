@@ -1,29 +1,31 @@
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Great+Vibes&family=Montserrat:wght@300;400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Great+Vibes&family=Montserrat:wght@300;400;500&family=Frank+Ruhl+Libre:wght@400;700&display=swap');
 
 /* =========================================
    RESET & BASE
    ========================================= */
-*, *::before, *::after {
+*,
+*::before,
+*::after {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
 :root {
-    --primary-purple: #5e2c5f;
+    --primary-purple: #5a2a5c;
     --primary-orange: #d96c42;
-    --border-color: #8a6c8e;
+    --border-color: #876889;
     --border-inner: #d18a6a;
-    --text-dark: #452449;
-    --text-light: #7c5d7e;
-    --bg-color: #f7eff6;
+    --text-dark: #432246;
+    --text-light: #785a7a;
+    --bg-color: #f6edf7;
     --paper-texture: url('rice-paper.png');
-    --card-bg: #fdf5fc;
-    --env-back: #c8a8c5;
-    --env-side: #ddc5da;
-    --env-bottom: #e6d2e4;
-    --env-flap: #d4b8d2;
-    --envelope-shadow: rgba(94, 44, 95, 0.2);
+    --card-bg: #fcf4fd;
+    --env-back: #c4a2c2;
+    --env-side: #d8c2d6;
+    --env-bottom: #e2cee0;
+    --env-flap: #d0b6ce;
+    --envelope-shadow: rgba(90, 42, 92, 0.2);
 
     /* Safe area insets — zero par défaut, remplacées par env() sur iOS */
     --sat: env(safe-area-inset-top, 0px);
@@ -34,8 +36,10 @@
 
 html {
     scroll-behavior: smooth;
-    scroll-padding-top: 60px; /* hauteur de la navbar */
-    -webkit-text-size-adjust: 100%; /* empêche iOS de grossir les textes en landscape */
+    scroll-padding-top: 60px;
+    /* hauteur de la navbar */
+    -webkit-text-size-adjust: 100%;
+    /* empêche iOS de grossir les textes en landscape */
     text-size-adjust: 100%;
 }
 
@@ -87,7 +91,7 @@ body.scroll-locked {
 }
 
 /* =========================================
-   ENVELOPPE — OVERLAY
+   ENVELOPPE — OVERLAY (INTRODUCTION)
    ========================================= */
 .envelope-overlay {
     position: fixed;
@@ -97,11 +101,17 @@ body.scroll-locked {
     /* Fallback vh, puis dvh pour iOS 15.4+ */
     height: 100vh;
     height: 100dvh;
-    /* Tient compte du notch et de la home bar */
     padding-top: var(--sat);
     padding-bottom: var(--sab);
     z-index: 20000;
-    background-color: var(--bg-color);
+
+    /* EFFET PAPIER IDENTIQUE AUX CARTES DU SITE */
+    background-color: var(--card-bg);
+    background-image: linear-gradient(rgba(255,255,255,0.72), rgba(255,255,255,0.72)), url('img.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -114,28 +124,45 @@ body.scroll-locked {
 .envelope-perspective {
     perspective: 1500px;
     -webkit-perspective: 1500px;
+    margin-top: 12vh;
+    /* descend l'enveloppe pour laisser de la place à la carte */
 }
 
 .envelope-wrapper {
     position: relative;
     width: min(440px, 88vw);
     height: calc(min(440px, 88vw) * 300 / 440);
-    transition: transform 0.3s ease;
+    transition: transform 0.4s ease;
     /* PAS de preserve-3d ici : évite que la card-inside entre dans
        le contexte 3D du rabat, ce qui cause le flash iOS Safari */
 }
 
+/* Pas de pseudo-éléments sur le wrapper — effet appliqué sur les faces */
+
 .envelope-wrapper:hover:not(.opened) {
-    transform: translateY(-4px);
+    transform: translateY(-5px);
+}
+
+.envelope-wrapper.opened::before,
+.envelope-wrapper.opened::after {
+    animation: none;
+    opacity: 0;
 }
 
 .env-back {
     position: absolute;
     inset: 0;
-    background-color: var(--env-back);
-    background-image: var(--paper-texture);
+    background-color: var(--env-bottom);
+    background-image: none;
+    background-size: auto, cover;
+    background-position: center, center;
     border-radius: 4px;
-    box-shadow: 0 12px 35px var(--envelope-shadow);
+    box-shadow:
+        0 2px 8px rgba(0, 0, 0, 0.18),
+        0 10px 30px rgba(94, 44, 95, 0.18),
+        0 25px 55px rgba(94, 44, 95, 0.10),
+        inset 0 1px 0 rgba(255, 255, 255, 0.35),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.06);
     z-index: 1;
 }
 
@@ -183,38 +210,64 @@ body.scroll-locked {
 
 .env-left {
     position: absolute;
-    top: 0; left: 0;
-    width: 45%; height: 100%;
+    top: 0;
+    left: 0;
+    width: 45%;
+    height: 100%;
     background-color: var(--env-side);
-    background-image: var(--paper-texture);
+    background-image:
+        linear-gradient(to right, rgba(60, 20, 80, 0.18), rgba(100, 50, 130, 0.08)),
+        linear-gradient(rgba(240, 228, 244, 0.25), rgba(240, 228, 244, 0.25)),
+        url('img.png');
+    background-size: auto, auto, cover;
+    background-position: center, center, 0% center;
     clip-path: polygon(0 0, 100% 50%, 0 100%);
     -webkit-clip-path: polygon(0 0, 100% 50%, 0 100%);
+    filter: drop-shadow(3px 0 8px rgba(50, 10, 80, 0.35));
 }
 
 .env-right {
     position: absolute;
-    top: 0; right: 0;
-    width: 45%; height: 100%;
+    top: 0;
+    right: 0;
+    width: 45%;
+    height: 100%;
     background-color: var(--env-side);
-    background-image: var(--paper-texture);
+    background-image:
+        linear-gradient(to left, rgba(60, 20, 80, 0.18), rgba(100, 50, 130, 0.08)),
+        linear-gradient(rgba(240, 228, 244, 0.25), rgba(240, 228, 244, 0.25)),
+        url('img.png');
+    background-size: auto, auto, cover;
+    background-position: center, center, 100% center;
     clip-path: polygon(100% 0, 100% 100%, 0 50%);
     -webkit-clip-path: polygon(100% 0, 100% 100%, 0 50%);
+    filter: drop-shadow(-3px 0 8px rgba(50, 10, 80, 0.35));
 }
 
 .env-bottom {
     position: absolute;
-    bottom: 0; left: 0;
-    width: 100%; height: 50.5%;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 50.5%;
     background-color: var(--env-bottom);
-    background-image: var(--paper-texture);
+    background-image:
+        linear-gradient(to top, rgba(60, 20, 80, 0.15), rgba(100, 50, 130, 0.06)),
+        linear-gradient(rgba(240, 228, 244, 0.25), rgba(240, 228, 244, 0.25)),
+        url('img.png');
+    background-size: auto, auto, cover;
+    background-position: center, center, center 80%;
     clip-path: polygon(0 100%, 0 0%, 50% 0, 100% 0%, 100% 100%);
     -webkit-clip-path: polygon(0 100%, 0 0%, 50% 0, 100% 0%, 100% 100%);
+    filter: drop-shadow(0 -3px 7px rgba(0, 0, 0, 0.16));
 }
 
 .env-flap {
     position: absolute;
-    top: 0; left: 0;
-    width: 100%; height: 60%;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 60%;
     z-index: 5;
     transform-origin: top center;
     transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), z-index 0s;
@@ -224,21 +277,31 @@ body.scroll-locked {
 
 .flap-front {
     position: absolute;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
     background-color: var(--env-flap);
-    background-image: var(--paper-texture);
+    background-image:
+        linear-gradient(160deg, rgba(212, 175, 55, 0.30) 0%, rgba(120, 55, 160, 0.12) 50%, rgba(212, 175, 55, 0.28) 100%),
+        linear-gradient(rgba(240, 228, 244, 0.25), rgba(240, 228, 244, 0.25)),
+        url('img.png');
+    background-size: auto, auto, cover;
+    background-position: center, center, center top;
     clip-path: polygon(0 0, 100% 0, 50% 100%);
     -webkit-clip-path: polygon(0 0, 100% 0, 50% 100%);
     border-radius: 4px 4px 0 0;
     backface-visibility: hidden;
     -webkit-backface-visibility: hidden;
+    filter: drop-shadow(0 5px 10px rgba(0, 0, 0, 0.22));
 }
 
 .flap-back {
     position: absolute;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
     background-color: var(--env-back);
     background-image: var(--paper-texture);
     clip-path: polygon(0 0, 100% 0, 50% 100%);
@@ -251,9 +314,11 @@ body.scroll-locked {
 
 .wax-seal {
     position: absolute;
-    left: 50%; top: 48.5%;
+    left: 50%;
+    top: 48.5%;
     transform: translate(-50%, -50%);
-    width: 31.8%; height: auto;
+    width: 31.8%;
+    height: auto;
     aspect-ratio: 1;
     z-index: 6;
     mix-blend-mode: multiply;
@@ -269,8 +334,8 @@ body.scroll-locked {
     -webkit-transform: perspective(1500px) rotateX(180deg);
     z-index: 1;
     transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1),
-                -webkit-transform 0.8s cubic-bezier(0.4, 0, 0.2, 1),
-                z-index 0s 0.4s;
+        -webkit-transform 0.8s cubic-bezier(0.4, 0, 0.2, 1),
+        z-index 0s 0.4s;
 }
 
 .envelope-wrapper.opened .wax-seal {
@@ -279,14 +344,18 @@ body.scroll-locked {
 }
 
 .envelope-wrapper.pull-out .card-inside {
-    transform: translateY(-54%);
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+    transform: translateY(-88%);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18), 0 16px 40px rgba(0, 0, 0, 0.14), 0 30px 60px rgba(0, 0, 0, 0.08);
 }
 
-.envelope-wrapper.zooming .env-back,
 .envelope-wrapper.zooming .env-pocket,
 .envelope-wrapper.zooming .env-flap,
 .envelope-wrapper.zooming .wax-seal {
+    opacity: 0;
+    transition: opacity 0.8s ease;
+}
+
+.envelope-wrapper.zooming .env-back {
     opacity: 0;
     transition: opacity 0.8s ease;
 }
@@ -303,19 +372,29 @@ body.scroll-locked {
 
 .instruction {
     position: absolute;
-    bottom: max(45px, calc(45px + var(--sab)));
+    bottom: max(100px, calc(100px + var(--sab)));
     font-family: 'Montserrat', sans-serif;
     text-transform: uppercase;
     letter-spacing: 3px;
-    font-size: 0.75rem;
-    color: var(--text-light);
+    font-size: 0.8rem;
+    color: #eaddcf;
+    /* Beige clair et élégant */
+    font-weight: 500;
+    text-shadow: 0 1px 4px rgba(67, 34, 70, 0.6);
     animation: pulse 2s infinite;
     transition: opacity 0.4s ease;
 }
 
 @keyframes pulse {
-    0%, 100% { opacity: 0.4; }
-    50% { opacity: 1; }
+
+    0%,
+    100% {
+        opacity: 0.4;
+    }
+
+    50% {
+        opacity: 1;
+    }
 }
 
 /* Animation 3D identique sur tous les appareils — aucune surcharge mobile */
@@ -356,7 +435,7 @@ body.scroll-locked {
 /* =========================================
    CONTENEUR PRINCIPAL
    ========================================= */
-.main-site > .container {
+.main-site>.container {
     padding-left: max(12px, calc(12px + var(--sal)));
     padding-right: max(12px, calc(12px + var(--sar)));
 }
@@ -380,6 +459,18 @@ body.scroll-locked {
 .card-elegant.card-visible {
     opacity: 1;
     transform: translateY(0);
+}
+
+/* =========================================
+   FOND POUR LA SECTION LIEU
+   ========================================= */
+#lieu.card-elegant {
+    background-image:
+        linear-gradient(rgba(253, 245, 252, 0.85), rgba(253, 245, 252, 0.85)),
+        url('chateau.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
 }
 
 /* =========================================
@@ -418,7 +509,8 @@ body.scroll-locked {
 }
 
 .countdown-label {
-    font-size: 0.6rem;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.85rem;
     text-transform: uppercase;
     letter-spacing: 2px;
     color: var(--text-light);
@@ -493,20 +585,29 @@ body.scroll-locked {
 
 .parents-section {
     margin-bottom: 30px;
-    font-size: 0.85rem;
-    line-height: 1.8;
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.55rem;
+    font-style: italic;
+    line-height: 2;
+    text-transform: none;
+    letter-spacing: 0.5px;
     color: var(--text-light);
 }
 
+
 .parents-section strong {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 1.65rem;
+    letter-spacing: 0.8px;
     color: var(--text-dark);
-    font-weight: 500;
 }
 
 .announce-text {
-    font-size: 0.75rem;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1rem;
+    font-style: italic;
     color: var(--text-light);
     margin: 15px 0 35px;
     line-height: 1.8;
@@ -575,9 +676,10 @@ body.scroll-locked {
 }
 
 .invite-text {
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 2px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.15rem;
+    font-style: italic;
+    letter-spacing: 0.5px;
     color: var(--text-light);
     margin: 20px 0;
     line-height: 1.8;
@@ -610,7 +712,8 @@ body.scroll-locked {
 }
 
 .date-month-year {
-    font-size: 0.75rem;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1rem;
     text-transform: uppercase;
     letter-spacing: 2.5px;
     color: var(--text-dark);
@@ -674,7 +777,10 @@ body.scroll-locked {
     touch-action: manipulation;
 }
 
-.btn-waze:hover { background-color: var(--text-dark); color: #fff; }
+.btn-waze:hover {
+    background-color: var(--text-dark);
+    color: #fff;
+}
 
 /* =========================================
    CONTACTS
@@ -688,7 +794,10 @@ body.scroll-locked {
     margin-bottom: 4px;
 }
 
-.contact-info { font-size: 0.8rem; color: var(--text-light); }
+.contact-info {
+    font-size: 0.8rem;
+    color: var(--text-light);
+}
 
 .contact-email {
     font-size: 0.75rem;
@@ -754,7 +863,10 @@ body.scroll-locked {
     touch-action: manipulation;
 }
 
-.btn-submit:hover { background-color: var(--text-dark); color: #fff; }
+.btn-submit:hover {
+    background-color: var(--text-dark);
+    color: #fff;
+}
 
 .form-check-input:checked {
     background-color: var(--primary-purple);
@@ -767,7 +879,9 @@ body.scroll-locked {
     color: var(--text-dark);
 }
 
-.form-check-input { cursor: pointer; }
+.form-check-input {
+    cursor: pointer;
+}
 
 /* =========================================
    MODALE CHOIX ITINÉRAIRE (bottom-sheet)
@@ -882,8 +996,10 @@ body.scroll-locked {
    ========================================= */
 .success-modal {
     position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -895,7 +1011,10 @@ body.scroll-locked {
     padding: var(--sat) var(--sar) var(--sab) var(--sal);
 }
 
-.success-modal.show { opacity: 1; pointer-events: auto; }
+.success-modal.show {
+    opacity: 1;
+    pointer-events: auto;
+}
 
 .success-modal-backdrop {
     position: absolute;
@@ -918,7 +1037,11 @@ body.scroll-locked {
     width: 100%;
 }
 
-.success-icon { font-size: 3rem; color: #4CAF50; margin-bottom: 12px; }
+.success-icon {
+    font-size: 3rem;
+    color: #4CAF50;
+    margin-bottom: 12px;
+}
 
 .success-title {
     font-family: 'Great Vibes', cursive;
@@ -927,7 +1050,11 @@ body.scroll-locked {
     margin-bottom: 8px;
 }
 
-.success-text { font-size: 0.85rem; color: var(--text-light); line-height: 1.7; }
+.success-text {
+    font-size: 0.85rem;
+    color: var(--text-light);
+    line-height: 1.7;
+}
 
 #notification-container {
     position: fixed;
@@ -956,9 +1083,18 @@ body.scroll-locked {
     transition: all 0.4s ease;
 }
 
-.toast.show { opacity: 1; transform: translateY(0); }
-.toast.success { border-left: 4px solid #4CAF50; }
-.toast.error { border-left: 4px solid #f44336; }
+.toast.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.toast.success {
+    border-left: 4px solid #4CAF50;
+}
+
+.toast.error {
+    border-left: 4px solid #f44336;
+}
 
 #nb_personnes_container {
     transition: all 0.5s ease-out;
@@ -978,27 +1114,49 @@ body.scroll-locked {
    RESPONSIVE — iPAD PORTRAIT (768px–1024px)
    ========================================= */
 @media (min-width: 768px) and (max-width: 1024px) {
+
     /* Sur iPad, légèrement réduire les paddings */
     .card-invitation .invitation-border-inner {
         padding: 90px 40px 75px;
     }
 
-    .name { font-size: 4rem; }
-    .countdown-title { font-size: 2.2rem; }
-    .rsvp-title { font-size: 2.6rem; }
+    .name {
+        font-size: 4rem;
+    }
+
+    .countdown-title {
+        font-size: 2.2rem;
+    }
+
+    .rsvp-title {
+        font-size: 2.6rem;
+    }
 
     /* Les inputs restent à 16px pour éviter le zoom même sur iPad */
-    .input-custom { font-size: 16px; }
+    .input-custom {
+        font-size: 16px;
+    }
 }
 
 /* =========================================
    RESPONSIVE — TABLETTES / PHABLETS (576px–768px)
    ========================================= */
 @media (max-width: 768px) {
-    .card-invitation .invitation-border-inner { padding: 90px 30px 75px; }
-    .name { font-size: 3.8rem; }
-    .countdown-title { font-size: 2rem; }
-    .rsvp-title { font-size: 2.4rem; }
+    .card-invitation .invitation-border-inner {
+        padding: 90px 30px 75px;
+    }
+
+    .name {
+        font-size: 3.8rem;
+    }
+
+    .countdown-title {
+        font-size: 2rem;
+    }
+
+    .rsvp-title {
+        font-size: 2.4rem;
+    }
 }
 
 /* =========================================
@@ -1014,92 +1172,292 @@ body.scroll-locked {
     }
 
     /* Enveloppe */
-    .card-text { font-size: 1.8rem; }
-    .card-logo { max-width: 45%; }
+    .card-text {
+        font-size: 1.8rem;
+    }
+
+    .card-logo {
+        max-width: 45%;
+    }
 
     /* Borders */
-    .invitation-border-outer { margin: 10px; }
-    .invitation-border-inner { padding: 60px 14px 50px; }
-    .card-invitation .invitation-border-inner { padding: 80px 14px 65px; }
+    .invitation-border-outer {
+        margin: 10px;
+    }
+
+    .invitation-border-inner {
+        padding: 60px 14px 50px;
+    }
+
+    .card-invitation .invitation-border-inner {
+        padding: 80px 14px 65px;
+    }
 
     /* Fleurs décoratives */
-    .floral-cluster { width: 180px; max-width: 48%; }
-    .floral-cluster.top-left { top: -10px; left: -10px; }
-    .floral-cluster.bottom-right { bottom: -10px; right: -10px; }
+    .floral-cluster {
+        width: 180px;
+        max-width: 48%;
+    }
+
+    .floral-cluster.top-left {
+        top: -10px;
+        left: -10px;
+    }
+
+    .floral-cluster.bottom-right {
+        bottom: -10px;
+        right: -10px;
+    }
 
     /* Logo SVG centré */
-    .logo-img { width: 180px; max-width: 65%; }
+    .logo-img {
+        width: 180px;
+        max-width: 65%;
+    }
 
-    /* Parents — colonne unique */
-    .parents-section { font-size: 0.72rem; letter-spacing: 0.8px; }
-    .parents-section .col-sm-6 { flex: 0 0 100%; max-width: 100%; }
+    /* Parents — deux colonnes côte à côte sur mobile */
+    .parents-section {
+        font-size: clamp(0.80rem, 2.8vw, 1.10rem);
+        letter-spacing: 0;
+        line-height: 1.75;
+    }
+
+    .parents-section strong {
+        font-size: clamp(0.85rem, 3.0vw, 1.15rem);
+    }
 
     /* Noms */
-    .name { font-size: 3rem; }
-    .names-section { margin: 16px 0 24px; gap: 4px; }
+    .name {
+        font-size: 3rem;
+    }
+
+    .names-section {
+        margin: 16px 0 24px;
+        gap: 4px;
+    }
+
     /* Réduction du décalage vertical sur petit écran */
-    .name-left { transform: translateX(-30px) translateY(-18px); }
-    .name-right { transform: translateX(30px) translateY(18px); }
-    .name-left.visible { transform: translateX(0) translateY(-18px); }
-    .name-right.visible { transform: translateX(0) translateY(18px); }
-    .ampersand { font-size: 2.2rem; }
+    .name-left {
+        transform: translateX(-30px) translateY(-18px);
+    }
+
+    .name-right {
+        transform: translateX(30px) translateY(18px);
+    }
+
+    .name-left.visible {
+        transform: translateX(0) translateY(-18px);
+    }
+
+    .name-right.visible {
+        transform: translateX(0) translateY(18px);
+    }
+
+    .ampersand {
+        font-size: 2.2rem;
+    }
 
     /* Date — la ligne horizontale reste, on réduit la taille */
-    .date-section { gap: 10px; }
-    .date-line { width: 30px; }
-    .date-day { font-size: 2.8rem; }
-    .date-month-year { font-size: 0.65rem; letter-spacing: 1.5px; }
+    .date-section {
+        gap: 10px;
+    }
+
+    .date-line {
+        width: 30px;
+    }
+
+    .date-day {
+        font-size: 2.8rem;
+    }
+
+    .date-month-year {
+        font-size: 0.82rem;
+        letter-spacing: 1.5px;
+    }
 
     /* Textes */
-    .announce-text { font-size: 0.68rem; letter-spacing: 1px; margin: 10px 0 20px; }
-    .invite-text { font-size: 0.68rem; letter-spacing: 1px; }
-    .reception-details { font-size: 1.5rem; }
-    .rabbi-blessing { font-size: 0.9rem; padding: 0 8px; }
-    .section-title { font-size: 1.8rem; }
-    .countdown-title { font-size: 1.8rem; }
-    .rsvp-title { font-size: 2rem; }
+    .announce-text {
+        font-size: 0.85rem;
+        letter-spacing: 0;
+        margin: 10px 0 20px;
+    }
+
+    .invite-text {
+        font-size: 1rem;
+        letter-spacing: 0;
+    }
+
+    .reception-details {
+        font-size: 1.5rem;
+    }
+
+    .rabbi-blessing {
+        font-size: 0.9rem;
+        padding: 0 8px;
+    }
+
+    .section-title {
+        font-size: 1.8rem;
+    }
+
+    .countdown-title {
+        font-size: 1.8rem;
+    }
+
+    .rsvp-title {
+        font-size: 2rem;
+    }
 
     /* Countdown */
-    .countdown-box { min-width: 58px; padding: 8px 6px; }
-    .countdown-number { font-size: 1.4rem; }
+    .countdown-box {
+        min-width: 58px;
+        padding: 8px 6px;
+    }
+
+    .countdown-number {
+        font-size: 1.4rem;
+    }
 
     /* Contacts — empilés en colonne sur mobile */
-    #contacts .row { flex-direction: column; gap: 16px; }
-    .contact-email { font-size: 0.7rem; }
+    #contacts .row {
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .contact-email {
+        font-size: 0.7rem;
+    }
 
     /* RSVP form */
-    .d-flex.flex-wrap.gap-3:has(.form-check) { gap: 8px !important; }
+    .d-flex.flex-wrap.gap-3:has(.form-check) {
+        gap: 8px !important;
+    }
 
     /* Inputs — maintenu à 16px pour éviter le zoom iOS */
-    .input-custom { font-size: 16px; }
+    .input-custom {
+        font-size: 16px;
+    }
 
     /* Bouton soumettre */
-    .btn-submit { padding: 12px 28px; letter-spacing: 2px; width: 100%; }
+    .btn-submit {
+        padding: 12px 28px;
+        letter-spacing: 2px;
+        width: 100%;
+    }
 
     /* Bouton Waze pleine largeur */
-    .btn-waze { width: 100% !important; text-align: center; }
+    .btn-waze {
+        width: 100% !important;
+        text-align: center;
+    }
 }
 
 /* =========================================
    RESPONSIVE — iPhone SE et très petits (≤390px)
    ========================================= */
 @media (max-width: 390px) {
-    .name { font-size: 2.6rem; }
-    .invitation-border-inner { padding: 55px 10px 45px; }
-    .card-invitation .invitation-border-inner { padding: 70px 10px 55px; }
-    .parents-section { font-size: 0.65rem; }
-    .date-day { font-size: 2.4rem; }
-    .countdown-number { font-size: 1.25rem; }
-    .countdown-box { min-width: 52px; }
-    .rsvp-title { font-size: 1.8rem; }
-    .nav-link-custom { font-size: 0.62rem; letter-spacing: 1px; padding: 4px 8px; }
+    .name {
+        font-size: 2.6rem;
+    }
+
+    .invitation-border-inner {
+        padding: 55px 10px 45px;
+    }
+
+    .card-invitation .invitation-border-inner {
+        padding: 70px 10px 55px;
+    }
+
+    .parents-section {
+        font-size: clamp(0.65rem, 2.2vw, 0.95rem);
+        letter-spacing: -0.3px;
+        line-height: 1.7;
+        word-break: keep-all;
+    }
+
+    .parents-section strong {
+        font-size: clamp(0.68rem, 2.3vw, 1.00rem);
+        letter-spacing: -0.3px;
+    }
+
+    .date-day {
+        font-size: 2.4rem;
+    }
+
+    .countdown-number {
+        font-size: 1.25rem;
+    }
+
+    .countdown-box {
+        min-width: 52px;
+    }
+
+    .rsvp-title {
+        font-size: 1.8rem;
+    }
+
+    .nav-link-custom {
+        font-size: 0.62rem;
+        letter-spacing: 1px;
+        padding: 4px 8px;
+    }
 }
 
 /* =========================================
    RESPONSIVE — iPhone SE classique (≤375px)
    ========================================= */
 @media (max-width: 375px) {
-    .name { font-size: 2.3rem; }
-    .date-day { font-size: 2.2rem; }
-    .date-line { width: 20px; }
+    .name {
+        font-size: 2.3rem;
+    }
+
+    .date-day {
+        font-size: 2.2rem;
+    }
+
+    .date-line {
+        width: 20px;
+    }
+}
+
+/* =========================================
+   BOUTON DE MUSIQUE
+   ========================================= */
+.music-control {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: var(--primary-purple);
+    color: white;
+    border: none;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5rem;
+    z-index: 30000;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.music-control.muted {
+    background-color: #a0a0a0 !important;
+}
+
+.music-control:hover {
+    background-color: var(--text-dark);
+    transform: scale(1.1);
+}
+
+@media (max-width: 768px) {
+    .music-control {
+        bottom: 15px;
+        right: 15px;
+        width: 45px;
+        height: 45px;
+        font-size: 1.3rem;
+    }
 }

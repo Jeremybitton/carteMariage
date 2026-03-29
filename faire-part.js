@@ -45,6 +45,24 @@ if (envelopeOverlay && envelope) {
         envelope.classList.add('opened');
         if (instruction) instruction.style.opacity = '0';
 
+        // Lancement de la musique
+        var bgMusic = document.getElementById('bg-music');
+        var musicIcon = document.getElementById('music-icon');
+        var musicBtn = document.getElementById('music-btn');
+        if (bgMusic) {
+            bgMusic.play().then(function() {
+                if (musicIcon) {
+                    musicIcon.classList.remove('bi-volume-mute-fill');
+                    musicIcon.classList.add('bi-volume-up-fill');
+                }
+                if (musicBtn) {
+                    musicBtn.classList.remove('muted');
+                }
+            }).catch(function(err) {
+                console.log("Lecture audio bloquée ou non trouvée", err);
+            });
+        }
+
         // 2. Sort la carte
         setTimeout(function () {
             envelope.classList.add('pull-out');
@@ -180,7 +198,8 @@ document.addEventListener('DOMContentLoaded', function () {
 // =============================================
 document.addEventListener('DOMContentLoaded', function () {
 
-    var presentRadios = document.querySelectorAll('input[name="presence"]');
+    var presentHouppaRadios = document.querySelectorAll('input[name="presence_houppa"]');
+    var presentMairieRadios = document.querySelectorAll('input[name="presence_mairie"]');
     var nbPersonnesContainer = document.getElementById('nb_personnes_container');
     var nbPersonnesInput = document.getElementById('nombre');
 
@@ -188,18 +207,32 @@ document.addEventListener('DOMContentLoaded', function () {
         nbPersonnesContainer.classList.remove('hidden');
     }
 
-    presentRadios.forEach(function (radio) {
-        radio.addEventListener('change', function () {
-            if (this.value === 'non') {
-                if (nbPersonnesContainer) nbPersonnesContainer.classList.add('hidden');
-                if (nbPersonnesInput) nbPersonnesInput.value = '0';
-            } else {
-                if (nbPersonnesContainer) nbPersonnesContainer.classList.remove('hidden');
-                if (nbPersonnesInput && (nbPersonnesInput.value === '0' || nbPersonnesInput.value === '')) {
-                    nbPersonnesInput.value = '1';
-                }
+    function updateNbPersonnesVisibility() {
+        var houppaChecked = document.querySelector('input[name="presence_houppa"]:checked');
+        var mairieChecked = document.querySelector('input[name="presence_mairie"]:checked');
+
+        var presentHouppa = houppaChecked ? houppaChecked.value === 'oui' : false;
+        var presentMairie = mairieChecked ? mairieChecked.value === 'oui' : false;
+
+        if (!presentHouppa && !presentMairie && houppaChecked && mairieChecked) {
+            // Si la personne a répondu non aux deux
+            if (nbPersonnesContainer) nbPersonnesContainer.classList.add('hidden');
+            if (nbPersonnesInput) nbPersonnesInput.value = '0';
+        } else {
+            // Si la personne est présente à au moins un événement
+            if (nbPersonnesContainer) nbPersonnesContainer.classList.remove('hidden');
+            if (nbPersonnesInput && (nbPersonnesInput.value === '0' || nbPersonnesInput.value === '')) {
+                nbPersonnesInput.value = '1';
             }
-        });
+        }
+    }
+
+    presentHouppaRadios.forEach(function (radio) {
+        radio.addEventListener('change', updateNbPersonnesVisibility);
+    });
+
+    presentMairieRadios.forEach(function (radio) {
+        radio.addEventListener('change', updateNbPersonnesVisibility);
     });
 
     // Toast notification
@@ -231,19 +264,29 @@ document.addEventListener('DOMContentLoaded', function () {
     if (rsvpForm) {
         rsvpForm.addEventListener('submit', function (e) {
             e.preventDefault();
-            var scriptURL = 'https://script.google.com/macros/s/AKfycbxJEXijLNicmvGf-PDgMSdMtOgxAJEDArBTjEfJmu7C8I9tS_LxJz3jIdF98Sa0eV6NQw/exec';
+            var scriptURL = 'https://script.google.com/macros/s/AKfycbx8FMjFRorZNc6_RMbB9ynjoKSFjUDcNLxAhbxXoUnFTJe9ptRYAOBn5aN3mdoP8U-N_w/exec';
             var btn = document.getElementById('submit-btn');
             var originalText = btn.innerHTML;
             btn.innerHTML = '<i class="bi bi-hourglass-split me-2"></i>Envoi...';
             btn.disabled = true;
 
-            var presenceChecked = document.querySelector('input[name="presence"]:checked');
+            var presenceHouppaChecked = document.querySelector('input[name="presence_houppa"]:checked');
+            var presenceMairieChecked = document.querySelector('input[name="presence_mairie"]:checked');
+
+            var presentHouppa = presenceHouppaChecked ? presenceHouppaChecked.value : '';
+            var presentMairie = presenceMairieChecked ? presenceMairieChecked.value : '';
+
+            var isPresent = (presentHouppa === 'oui' || presentMairie === 'oui');
+
             var payload = {
                 prenom: document.getElementById('prenom').value,
                 nom: document.getElementById('nom').value,
                 famille: (document.querySelector('input[name="famille"]:checked') || {}).value || '',
-                presence: presenceChecked ? presenceChecked.value : '',
-                nombre: (presenceChecked && presenceChecked.value === 'oui')
+                presence_houppa: document.querySelector('input[name="presence_houppa"]:checked')?.value,
+                presence_mairie: document.querySelector('input[name="presence_mairie"]:checked')?.value,
+                // On garde la propriété 'presence' pour la rétrocompatibilité ou si votre script l'attend
+                presence: (isPresent ? 'oui' : (presentHouppa && presentMairie ? 'non' : '')), 
+                nombre: isPresent
                     ? (parseInt(document.getElementById('nombre').value, 10) || 1)
                     : 0,
                 message: document.getElementById('message').value,
@@ -282,6 +325,35 @@ document.addEventListener('DOMContentLoaded', function () {
     if (modalBackdrop) {
         modalBackdrop.addEventListener('click', function () {
             document.getElementById('successModal').classList.remove('show');
+        });
+    }
+});
+
+// =============================================
+//  GESTION DE LA MUSIQUE
+// =============================================
+document.addEventListener('DOMContentLoaded', function () {
+    var musicBtn = document.getElementById('music-btn');
+    var bgMusic = document.getElementById('bg-music');
+    var musicIcon = document.getElementById('music-icon');
+
+    if (musicBtn && bgMusic) {
+        musicBtn.addEventListener('click', function () {
+            if (bgMusic.paused) {
+                bgMusic.play();
+                musicBtn.classList.remove('muted');
+                if (musicIcon) {
+                    musicIcon.classList.remove('bi-volume-mute-fill');
+                    musicIcon.classList.add('bi-volume-up-fill');
+                }
+            } else {
+                bgMusic.pause();
+                musicBtn.classList.add('muted');
+                if (musicIcon) {
+                    musicIcon.classList.remove('bi-volume-up-fill');
+                    musicIcon.classList.add('bi-volume-mute-fill');
+                }
+            }
         });
     }
 });
