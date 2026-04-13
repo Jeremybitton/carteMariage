@@ -1,4 +1,146 @@
 // =============================================
+//  TRADUCTIONS FR / HE
+// =============================================
+var translations = {
+    fr: {
+        'instruction': 'Cliquez pour ouvrir',
+        'nav-faire-part': 'Faire-part',
+        'nav-lieu': 'Lieu',
+        'nav-rsvp': 'RSVP',
+        'countdown-title': 'Le grand jour approche...',
+        'cd-days-label': 'Jours',
+        'cd-hours-label': 'Heures',
+        'cd-mins-label': 'Minutes',
+        'cd-secs-label': 'Secondes',
+        'parents-left': 'M. et Mme<br>Alice&nbsp;&amp;&nbsp;Armand&nbsp;Bitton<br><br><strong>M. et Mme<br>Déborah&nbsp;&amp;&nbsp;Simon&nbsp;Bitton</strong>',
+        'parents-right': 'Mme Rachel Abittan<br>Mme Odette Anidjar<br><br><strong>M. et Mme<br>Aviva&nbsp;&amp;&nbsp;Dan&nbsp;Anidjar</strong>',
+        'announce-text-1': 'Remercient Hachem d\'avoir la joie de vous faire part<br>du mariage de leurs petits-enfants et enfants',
+        'invite-text-1': 'Et vous prient de bien vouloir assister à la Houpa<br>Qui sera célébrée à 16h30',
+        'date-1-top': 'Dimanche<br>15 Sivan',
+        'date-1-bot': 'mai 2026<br>5786',
+        'reception-1': 'La houppa sera suivie d\'une réception',
+        'pensee': 'Une pensée particulière à nos chers grands parents<br><strong>Richard et Esther Georgette Zarrouk</strong> et à <strong>Amram Abittan et Itshak Anidjar</strong><br>avec qui nous aurions aimé vivre ce moment.',
+        'announce-text-2': 'Se diront oui,',
+        'invite-text-2': 'À la mairie de Gagny,<br>1 esplanade michel teulet, 93220<br><br>à 15h30',
+        'date-2-top': 'Mercredi<br>',
+        'date-2-bot': 'juin<br>2026',
+        'reception-2': 'La cérémonie sera suivie d\'un vin d\'honneur',
+        'section-lieu': '<i class="bi bi-geo-alt me-2"></i>Lieu &amp; Horaires',
+        'location-time': 'À 16h30 - précédé d\'une Kabbalat Panim',
+        'btn-itineraire': '<i class="bi bi-map-fill me-2"></i>Itinéraire',
+        'section-contacts': '<i class="bi bi-telephone me-2"></i>Contacts',
+        'response-note': 'Réponse souhaitée<br>dès réception',
+        'rsvp-title': 'Confirmez votre présence',
+        'rsvp-subtitle': 'Merci de répondre dès que possible',
+        'label-prenom': 'Prénom',
+        'label-nom': 'Nom',
+        'label-famille': 'Famille',
+        'label-famille-bitton': 'Famille Bitton',
+        'label-famille-anidjar': 'Famille Anidjar',
+        'label-houppa': 'Serez-vous présent(e) pour la houppa ?',
+        'label-oui-h': 'Oui',
+        'label-non-h': 'Non',
+        'label-mairie': 'Serez-vous présent(e) pour la mairie ?',
+        'label-oui-m': 'Oui',
+        'label-non-m': 'Non',
+        'label-nombre': 'Nombre de personnes',
+        'label-message': 'Message (optionnel)',
+        'btn-confirmer': '<i class="bi bi-envelope-heart me-2"></i>Confirmer',
+        'success-title': 'Merci !',
+        'success-text': 'Votre réponse a bien été enregistrée.<br>Nous avons hâte de vous retrouver !',
+        'success-close': 'Fermer',
+        'maps-title': 'Ouvrir l\'itinéraire avec',
+        'maps-cancel': 'Annuler',
+        'ph-prenom': 'Votre prénom',
+        'ph-nom': 'Votre nom',
+        'ph-message': 'Un petit mot pour les mariés...'
+    },
+    he: {
+        'instruction': 'לחצו לפתיחה',
+        'nav-faire-part': 'הזמנה',
+        'nav-lieu': 'מיקום',
+        'nav-rsvp': 'אישור הגעה',
+        'countdown-title': 'היום הגדול מתקרב...',
+        'cd-days-label': 'ימים',
+        'cd-hours-label': 'שעות',
+        'cd-mins-label': 'דקות',
+        'cd-secs-label': 'שניות',
+        'parents-left': 'מר וגברת<br>אליס&nbsp;&amp;&nbsp;ארמן&nbsp;ביטון<br><br><strong>מר וגברת<br>דבורה&nbsp;&amp;&nbsp;שמעון&nbsp;ביטון</strong>',
+        'parents-right': 'גב\' רחל אביטן<br>גב\' אודט אנידז\'ר<br><br><strong>מר וגברת<br>אביבה&nbsp;&amp;&nbsp;דן&nbsp;אנידז\'ר</strong>',
+        'announce-text-1': 'מודים לה\' על השמחה לבשר לכם<br>על נישואי נכדיהם וילדיהם',
+        'invite-text-1': 'ומזמינים אתכם להשתתף בחופה<br>שתיערך בשעה 16:30',
+        'date-1-top': 'יום ראשון<br>ט"ו סיון',
+        'date-1-bot': 'מאי 2026<br>תשפ"ו',
+        'reception-1': 'החופה תלווה בסעודת שמחה',
+        'pensee': 'מחשבה מיוחדת לסבינו ולסבתותינו היקרים<br><strong>ריצ\'ארד ואסתר ג\'ורג\'ט זרוק</strong> ו<strong>עמרם אביטן ויצחק אנידז\'ר</strong><br>שהיינו רוצים לחלוק איתם את הרגע הזה.',
+        'announce-text-2': ',יאמרו כן\u200F',
+        'invite-text-2': 'בבית העירייה של גאני,<br>1 esplanade michel teulet, 93220<br><br>בשעה 16:00',
+        'date-2-top': 'יום רביעי<br>',
+        'date-2-bot': 'יוני<br>2026',
+        'reception-2': 'הטקס יימשך בקבלת פנים',
+        'section-lieu': '<i class="bi bi-geo-alt me-2"></i>מיקום ושעה',
+        'location-time': 'קבלת פנים בשעה 16:30',
+        'btn-itineraire': '<i class="bi bi-map-fill me-2"></i>ניווט',
+        'section-contacts': '<i class="bi bi-telephone me-2"></i>יצירת קשר',
+        'response-note': 'נא לאשר הגעה<br>בהקדם האפשרי',
+        'rsvp-title': 'אשרו את הגעתכם',
+        'rsvp-subtitle': 'תודה לאשר בהקדם האפשרי',
+        'label-prenom': 'שם פרטי',
+        'label-nom': 'שם משפחה',
+        'label-famille': 'משפחה',
+        'label-famille-bitton': 'משפחת ביטון',
+        'label-famille-anidjar': 'משפחת אנידז\'ר',
+        'label-houppa': 'האם תהיו נוכחים בחופה?',
+        'label-oui-h': 'כן',
+        'label-non-h': 'לא',
+        'label-mairie': 'האם תהיו נוכחים בטקס האזרחי?',
+        'label-oui-m': 'כן',
+        'label-non-m': 'לא',
+        'label-nombre': 'מספר אנשים',
+        'label-message': 'הודעה (אופציונלי)',
+        'btn-confirmer': '<i class="bi bi-envelope-heart me-2"></i>אישור',
+        'success-title': 'תודה!',
+        'success-text': 'תשובתכם התקבלה בהצלחה.<br>אנו מצפים לראותכם!',
+        'success-close': 'סגור',
+        'maps-title': 'פתח ניווט עם',
+        'maps-cancel': 'ביטול',
+        'ph-prenom': 'השם הפרטי שלך',
+        'ph-nom': 'שם המשפחה שלך',
+        'ph-message': 'מילה קטנה לחתן ולכלה...'
+    }
+};
+
+function switchLang(lang) {
+    // Textes innerHTML
+    document.querySelectorAll('[data-i18n]').forEach(function (el) {
+        var key = el.getAttribute('data-i18n');
+        if (translations[lang][key] !== undefined) {
+            el.innerHTML = translations[lang][key];
+        }
+    });
+    // Placeholders
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(function (el) {
+        var key = el.getAttribute('data-i18n-placeholder');
+        if (translations[lang][key] !== undefined) {
+            el.placeholder = translations[lang][key];
+        }
+    });
+    // Langue uniquement, pas de changement de direction
+    document.documentElement.lang = lang === 'he' ? 'he' : 'fr';
+    // Boutons actifs
+    document.querySelectorAll('.lang-btn').forEach(function (btn) {
+        btn.classList.toggle('active', btn.getAttribute('data-lang') === lang);
+    });
+    localStorage.setItem('lang', lang);
+}
+
+// Restaurer la langue au chargement
+document.addEventListener('DOMContentLoaded', function () {
+    var saved = localStorage.getItem('lang');
+    if (saved && saved !== 'fr') switchLang(saved);
+});
+
+// =============================================
 //  SCROLL LOCK ROBUSTE POUR iOS SAFARI
 //  Technique position:fixed — empêche le scroll
 //  sur iOS sans les bugs de overflow:hidden
@@ -50,7 +192,7 @@ if (envelopeOverlay && envelope) {
         var musicIcon = document.getElementById('music-icon');
         var musicBtn = document.getElementById('music-btn');
         if (bgMusic) {
-            bgMusic.play().then(function() {
+            bgMusic.play().then(function () {
                 if (musicIcon) {
                     musicIcon.classList.remove('bi-volume-mute-fill');
                     musicIcon.classList.add('bi-volume-up-fill');
@@ -58,7 +200,7 @@ if (envelopeOverlay && envelope) {
                 if (musicBtn) {
                     musicBtn.classList.remove('muted');
                 }
-            }).catch(function(err) {
+            }).catch(function (err) {
                 console.log("Lecture audio bloquée ou non trouvée", err);
             });
         }
@@ -97,9 +239,9 @@ function getOS() {
     return 'other';
 }
 
-var DEST_APPLE  = 'https://maps.apple.com/?q=Ch%C3%A2teau+Barth%C3%A9l%C3%A9my&address=Route+Nationale+191%2C+78660+Paray-Douaville&dirflg=d';
+var DEST_APPLE = 'https://maps.apple.com/?q=Ch%C3%A2teau+Barth%C3%A9l%C3%A9my&address=Route+Nationale+191%2C+78660+Paray-Douaville&dirflg=d';
 var DEST_GOOGLE = 'https://www.google.com/maps/dir/?api=1&destination=Chateau+Barthelemy+Route+Nationale+191+78660+Paray-Douaville';
-var DEST_WAZE   = 'https://waze.com/ul?q=Chateau+Barthelemy+Paray-Douaville&navigate=yes';
+var DEST_WAZE = 'https://waze.com/ul?q=Chateau+Barthelemy+Paray-Douaville&navigate=yes';
 
 function openMapsChoice() {
     var os = getOS();
@@ -285,7 +427,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 presence_houppa: document.querySelector('input[name="presence_houppa"]:checked')?.value,
                 presence_mairie: document.querySelector('input[name="presence_mairie"]:checked')?.value,
                 // On garde la propriété 'presence' pour la rétrocompatibilité ou si votre script l'attend
-                presence: (isPresent ? 'oui' : (presentHouppa && presentMairie ? 'non' : '')), 
+                presence: (isPresent ? 'oui' : (presentHouppa && presentMairie ? 'non' : '')),
                 nombre: isPresent
                     ? (parseInt(document.getElementById('nombre').value, 10) || 1)
                     : 0,
@@ -356,4 +498,17 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     }
+});
+
+// =============================================
+//  DEFERRED BACKGROUND LOADING (OPTIMIZATION)
+// =============================================
+window.addEventListener('load', function() {
+    // We add the class after the page is fully loaded to defer downloading the heavy fond.png (3.7MB)
+    // and prioritize the envelope graphics (img.png).
+    document.body.classList.add('bg-loaded');
+
+    // Révèle l'enveloppe seulement une fois tous les assets chargés (images, fonts…)
+    var overlay = document.getElementById('envelopeOverlay');
+    if (overlay) overlay.style.opacity = '1';
 });
